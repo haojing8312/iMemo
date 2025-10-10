@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "HomeMemo",
+  "productName": "iMemo",
   "version": "0.1.0",
-  "identifier": "com.homememo.app",
+  "identifier": "com.imemo.app",
   "build": {
     "frontendDist": "out",
     "devUrl": "http://localhost:3000",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "HomeMemo - 百岁照生成",
+        "title": "iMemo - 有爱的记忆",
         "width": 1200,
         "height": 800,
         "minWidth": 1000,

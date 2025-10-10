@@ -66,7 +66,7 @@ iMemo 是一个注重隐私保护的 AI 原生相册应用，致力于为个人�
 - **桌面框架**: [Tauri 2.x](https://tauri.app/)
 - **UI 组件**: [Radix UI](https://www.radix-ui.com/) + [Tailwind CSS](https://tailwindcss.com/)
 - **状态管理**: [Zustand](https://zustand-demo.pmnd.rs/)
-- **AI 模型**: [SeeDream 4.0](https://www.volcengine.com/docs/6791/1308296) (BytePlus)
+- **AI 模型**: [SeeDream 4.0](https://www.volcengine.com/docs/82379/1541523) (BytePlus)
 - **语言**: TypeScript + Rust
 - **构建工具**: pnpm + Vite
 
@@ -210,7 +210,7 @@ iMemo 采用 **双重许可模式**：
 
 详细信息请查看 [LICENSE](LICENSE) 文件。
 
-**商业许可咨询**: haojing8312@gmail.com
+**商业许可咨询**: 364430879@qq.com
 
 ## 💬 联系方式
 
