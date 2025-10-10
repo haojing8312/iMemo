@@ -1,5 +1,5 @@
 {
-  "name": "HomeMemo",
+  "name": "iMemo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,7 +16,7 @@
     "postinstall": "node scripts/download-face-models.mjs || echo 'Face models download skipped'"
   },
   "keywords": ["baby-photo", "ai-generation", "tauri", "desktop-app", "privacy-first"],
-  "author": "HomeMemo Contributors",
+  "author": "iMemo Contributors",
   "license": "SEE LICENSE IN LICENSE",
   "packageManager": "pnpm@10.17.0",
   "dependencies": {
