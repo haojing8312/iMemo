@@ -1,10 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:github.blog)",
-      "Bash(uvx:*)"
+      "Bash(pnpm tauri:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

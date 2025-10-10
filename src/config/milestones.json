@@ -1,0 +1,267 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-10-09T00:00:00Z",
+  "categories": [
+    {
+      "id": "infancy",
+      "name": "婴儿期",
+      "ageRange": "0-1岁",
+      "order": 1,
+      "icon": "👶",
+      "milestones": [
+        {
+          "id": "birth",
+          "name": "出生",
+          "description": "新生儿照片",
+          "icon": "👶",
+          "order": 1,
+          "compatibleStyleIds": ["soft-pastel", "natural-light", "documentary", "warm-family"],
+          "defaultStyleIds": ["soft-pastel", "natural-light", "warm-family"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "full-month",
+          "name": "满月",
+          "description": "满月纪念照",
+          "icon": "🌙",
+          "order": 2,
+          "compatibleStyleIds": ["soft-pastel", "natural-light", "cute-props", "warm-family"],
+          "defaultStyleIds": ["soft-pastel", "cute-props", "warm-family"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "100-day",
+          "name": "百日照",
+          "description": "百日纪念照",
+          "icon": "💯",
+          "order": 3,
+          "compatibleStyleIds": ["soft-pastel", "bright-colorful", "cute-props", "natural-light"],
+          "defaultStyleIds": ["bright-colorful", "cute-props", "soft-pastel"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "first-birthday",
+          "name": "周岁",
+          "description": "一周岁生日照",
+          "icon": "🎂",
+          "order": 4,
+          "compatibleStyleIds": ["bright-colorful", "cute-props", "playful-fun", "soft-pastel"],
+          "defaultStyleIds": ["bright-colorful", "playful-fun", "cute-props"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "childhood",
+      "name": "童年期",
+      "ageRange": "1-12岁",
+      "order": 2,
+      "icon": "🧒",
+      "milestones": [
+        {
+          "id": "kindergarten",
+          "name": "幼儿园毕业",
+          "description": "幼儿园毕业照",
+          "icon": "🎓",
+          "order": 1,
+          "compatibleStyleIds": ["bright-colorful", "playful-fun", "documentary", "natural-light"],
+          "defaultStyleIds": ["bright-colorful", "playful-fun", "documentary"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "elementary-graduation",
+          "name": "小学毕业",
+          "description": "小学毕业照",
+          "icon": "📚",
+          "order": 2,
+          "compatibleStyleIds": ["documentary", "natural-light", "bright-colorful", "classic-portrait"],
+          "defaultStyleIds": ["documentary", "natural-light", "classic-portrait"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "birthday",
+          "name": "生日",
+          "description": "童年生日纪念",
+          "icon": "🎈",
+          "order": 3,
+          "compatibleStyleIds": ["bright-colorful", "playful-fun", "cute-props", "natural-light"],
+          "defaultStyleIds": ["bright-colorful", "playful-fun", "natural-light"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "adolescence",
+      "name": "青春期",
+      "ageRange": "12-18岁",
+      "order": 3,
+      "icon": "🎒",
+      "milestones": [
+        {
+          "id": "middle-school-graduation",
+          "name": "初中毕业",
+          "description": "初中毕业照",
+          "icon": "🎓",
+          "order": 1,
+          "compatibleStyleIds": ["documentary", "natural-light", "classic-portrait", "vintage-film"],
+          "defaultStyleIds": ["documentary", "natural-light", "classic-portrait"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "high-school-graduation",
+          "name": "高中毕业",
+          "description": "高中毕业照",
+          "icon": "🎓",
+          "order": 2,
+          "compatibleStyleIds": ["documentary", "natural-light", "classic-portrait", "vintage-film"],
+          "defaultStyleIds": ["documentary", "vintage-film", "classic-portrait"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "coming-of-age",
+          "name": "成人礼",
+          "description": "18岁成人仪式",
+          "icon": "🎊",
+          "order": 3,
+          "compatibleStyleIds": ["classic-portrait", "documentary", "romantic-soft-focus", "natural-light"],
+          "defaultStyleIds": ["classic-portrait", "romantic-soft-focus", "documentary"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "adulthood",
+      "name": "成年期",
+      "ageRange": "18-60岁",
+      "order": 4,
+      "icon": "👔",
+      "milestones": [
+        {
+          "id": "college-graduation",
+          "name": "大学毕业",
+          "description": "大学毕业照",
+          "icon": "🎓",
+          "order": 1,
+          "compatibleStyleIds": ["documentary", "natural-light", "classic-portrait", "vintage-film"],
+          "defaultStyleIds": ["documentary", "classic-portrait", "vintage-film"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "wedding",
+          "name": "结婚",
+          "description": "婚礼纪念照",
+          "icon": "💒",
+          "order": 2,
+          "compatibleStyleIds": ["romantic-soft-focus", "classic-portrait", "vintage-film", "documentary", "natural-light"],
+          "defaultStyleIds": ["romantic-soft-focus", "classic-portrait", "vintage-film"],
+          "minPhotos": 2,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "anniversary",
+          "name": "结婚纪念日",
+          "description": "结婚周年纪念",
+          "icon": "💝",
+          "order": 3,
+          "compatibleStyleIds": ["romantic-soft-focus", "classic-portrait", "natural-light", "documentary"],
+          "defaultStyleIds": ["romantic-soft-focus", "natural-light", "classic-portrait"],
+          "minPhotos": 2,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "parenthood",
+          "name": "新手父母",
+          "description": "初为人父人母",
+          "icon": "👨‍👩‍👧",
+          "order": 4,
+          "compatibleStyleIds": ["warm-family", "natural-light", "documentary", "soft-pastel"],
+          "defaultStyleIds": ["warm-family", "natural-light", "documentary"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "career-achievement",
+          "name": "职业成就",
+          "description": "职业里程碑",
+          "icon": "🏆",
+          "order": 5,
+          "compatibleStyleIds": ["classic-portrait", "documentary", "natural-light", "professional"],
+          "defaultStyleIds": ["classic-portrait", "professional", "documentary"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "elderly",
+      "name": "老年期",
+      "ageRange": "60岁以上",
+      "order": 5,
+      "icon": "👴",
+      "milestones": [
+        {
+          "id": "retirement",
+          "name": "退休",
+          "description": "退休纪念",
+          "icon": "🌅",
+          "order": 1,
+          "compatibleStyleIds": ["classic-portrait", "documentary", "natural-light", "warm-family"],
+          "defaultStyleIds": ["classic-portrait", "documentary", "natural-light"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "golden-anniversary",
+          "name": "金婚纪念",
+          "description": "50周年结婚纪念",
+          "icon": "💛",
+          "order": 2,
+          "compatibleStyleIds": ["classic-portrait", "romantic-soft-focus", "documentary", "warm-family"],
+          "defaultStyleIds": ["classic-portrait", "warm-family", "romantic-soft-focus"],
+          "minPhotos": 2,
+          "maxPhotos": 5,
+          "active": true
+        },
+        {
+          "id": "family-reunion",
+          "name": "家庭聚会",
+          "description": "家族合影",
+          "icon": "👨‍👩‍👧‍👦",
+          "order": 3,
+          "compatibleStyleIds": ["warm-family", "documentary", "natural-light", "classic-portrait"],
+          "defaultStyleIds": ["warm-family", "documentary", "natural-light"],
+          "minPhotos": 1,
+          "maxPhotos": 5,
+          "active": true
+        }
+      ]
+    }
+  ]
+}

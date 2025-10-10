@@ -1,0 +1,15 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="freshGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8F5E9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C8E6C9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#freshGradient)"/>
+  <text x="200" y="180" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#2E7D32" text-anchor="middle">森系清新</text>
+  <text x="200" y="220" font-family="Arial, sans-serif" font-size="28" fill="#388E3C" text-anchor="middle">治愈风</text>
+  <circle cx="160" cy="280" r="25" fill="#4CAF50" opacity="0.4"/>
+  <circle cx="210" cy="270" r="30" fill="#81C784" opacity="0.4"/>
+  <circle cx="240" cy="290" r="20" fill="#66BB6A" opacity="0.4"/>
+  <text x="200" y="360" font-family="Arial, sans-serif" font-size="18" fill="#666" text-anchor="middle">自然光 • 雾霾蓝背景</text>
+</svg>
