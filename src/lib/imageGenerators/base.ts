@@ -38,4 +38,4 @@ export interface ImageGenerator {
   checkConnection(): Promise<boolean>
 }
 
-export type ImageModel = 'gemini' | 'seedream'
+export type ImageModel = 'seedream'

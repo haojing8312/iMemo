@@ -1,7 +1,7 @@
 /**
  * 统一图像生成 API
- * 支持多种 AI 模型: Gemini, SeeDream 4.0
- * 通过环境变量 AI_IMAGE_MODEL 选择模型
+ * 使用 SeeDream 4.0 模型
+ * API Key 由用户在前端页面配置
  */
 
 import type {
@@ -9,33 +9,15 @@ import type {
   NanoBananaTaskStatusResponse,
   SimilarityLevel,
 } from './types'
-import type { ImageGenerator, ImageModel } from './imageGenerators/base'
-import { GeminiGenerator } from './imageGenerators/gemini'
+import type { ImageGenerator } from './imageGenerators/base'
 import { SeeDreamGenerator } from './imageGenerators/seedream'
-
-/**
- * 获取当前配置的图像生成器
- */
-function getImageGenerator(): ImageGenerator {
-  const model = (process.env.NEXT_PUBLIC_AI_IMAGE_MODEL || 'gemini') as ImageModel
-
-  console.log('[API] Selected image model:', model)
-
-  switch (model) {
-    case 'seedream':
-      return new SeeDreamGenerator()
-    case 'gemini':
-    default:
-      return new GeminiGenerator()
-  }
-}
 
 // 单例模式,避免重复创建生成器
 let generatorInstance: ImageGenerator | null = null
 
 function getGenerator(): ImageGenerator {
   if (!generatorInstance) {
-    generatorInstance = getImageGenerator()
+    generatorInstance = new SeeDreamGenerator()
   }
   return generatorInstance
 }
