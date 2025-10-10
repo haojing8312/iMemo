@@ -27,7 +27,7 @@ export default function Home() {
                 iMemo
               </span>
               <br />
-              <span className="text-neutral-800">有爱的记忆</span>
+              <span className="text-neutral-800">有爱（AI）的记忆</span>
             </h1>
 
             {/* 副标题 */}
