@@ -15,9 +15,9 @@
     "download-models": "node scripts/download-face-models.mjs",
     "postinstall": "node scripts/download-face-models.mjs || echo 'Face models download skipped'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["baby-photo", "ai-generation", "tauri", "desktop-app", "privacy-first"],
+  "author": "HomeMemo Contributors",
+  "license": "SEE LICENSE IN LICENSE",
   "packageManager": "pnpm@10.17.0",
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",

@@ -1,0 +1,61 @@
+HomeMemo Licensing Policy (Dual License: Community & Commercial)
+
+HomeMemo is released under a dual-license model: the HomeMemo Community License (free) and a Commercial License (paid).
+
+## 1. HomeMemo Community License
+
+### Permitted Uses (Free):
+
+**Individuals (Personal Use):**
+
+- Granted a free, perpetual license to use all standard HomeMemo functions.
+- Content created using HomeMemo (including generated baby photos) may be used for personal or commercial projects.
+
+**Organizations (Limited Use):**
+
+- Organizations may use HomeMemo only in its standard, unmodified, out-of-the-box form for evaluation or non-commercial purposes.
+
+### Strictly Prohibited Without a Commercial License:
+
+- **Team Deployment:** Installing, hosting, or operating HomeMemo for simultaneous use by multiple users in an organization (e.g., on shared servers, internal networks, or private clouds).
+
+- **Code Modification or Derivative Works:** Modifying, translating, reverse-engineering, or creating derivative products based on HomeMemo source code.
+
+- **Redistribution:** Redistributing HomeMemo (modified or unmodified) as part of another product or service.
+
+- **Competitive Offering:** Using HomeMemo (in whole or in part) as the foundation of a competing commercial product.
+
+## 2. Commercial License
+
+A Commercial License is **REQUIRED** for any of the following:
+
+- Internal multi-user or team deployment.
+- Any secondary development, customization, or modification of the source code.
+- Embedding or redistributing HomeMemo as part of your own commercial offering.
+- Access to official technical support, warranties, or indemnification.
+
+A Commercial License grants you the legal right to use HomeMemo for enterprise purposes and to adapt its source code for your organization's needs.
+
+**To obtain a Commercial License, please contact:** haojing8312@gmail.com
+
+## 3. Contributions
+
+By submitting contributions, you agree to grant the HomeMemo maintainers a perpetual, worldwide, royalty-free, irrevocable license to use, modify, and sublicense your contributions under both the Community and Commercial Licenses.
+
+## 4. Trademarks & UI
+
+The HomeMemo name, logo, and visual/interaction design are protected intellectual property and trademarks.
+
+You may not use HomeMemo branding, trademarks, or UI/UX designs for derivative or resale products without explicit permission.
+
+## 5. Privacy & Data Protection
+
+HomeMemo is designed with a local-first, privacy-focused architecture:
+
+- All user photos and generated images are stored locally only.
+- No user data is uploaded to external servers without explicit user consent.
+- Users retain full ownership of their data and generated content.
+
+---
+
+© 2025 HomeMemo Contributors. All rights reserved.
