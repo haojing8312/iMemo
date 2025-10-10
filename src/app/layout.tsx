@@ -21,8 +21,8 @@ export default function RootLayout({
               iMemo
             </Link>
             <nav className="flex items-center gap-6">
-              <Link href="/upload" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">上传照片</Link>
-              <Link href="/generation/milestone" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">选择里程碑</Link>
+              <Link href="/library" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">照片库</Link>
+              <Link href="/generation/select-photo" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">生成艺术照</Link>
               <Link href="/settings" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">设置</Link>
             </nav>
           </div>

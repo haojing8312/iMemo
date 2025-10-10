@@ -21,6 +21,14 @@ export interface PhotoUpload {
   cropY?: number // 0-1
   cropWidth?: number // 0-1
   cropHeight?: number // 0-1
+
+  // 新增：照片库字段
+  personId?: string        // 关联的人物 ID
+  personName?: string      // 人物名称（冗余，方便展示）
+  tags?: string[]          // 自定义标签
+  capturedAt?: number      // 拍摄时间（从 EXIF 读取或手动设置）
+  croppedPath?: string     // 裁剪后的文件路径（如果有）
+  isInLibrary?: boolean    // 是否保存到照片库（区分临时上传）
 }
 
 export interface StyleTemplate {
@@ -97,6 +105,18 @@ export interface NanoBananaImage {
   sequence: number
 }
 
+// 人物档案（照片库功能）
+export interface Person {
+  id: string
+  name: string              // 姓名
+  relationship?: string     // 关系：爸爸/妈妈/宝宝/爷爷/奶奶/其他
+  birthDate?: string        // 生日，格式：YYYY-MM-DD
+  avatar?: string           // 头像照片路径（从关联照片中选择）
+  createdAt: number         // 创建时间
+  updatedAt: number         // 更新时间
+  photoCount?: number       // 关联的照片数量（冗余字段）
+}
+
 // Store state types (Zustand)
 export interface AppStore {
   currentTaskId?: string
@@ -111,4 +131,34 @@ export interface AppStore {
   setSimilarityLevel: (level: SimilarityLevel) => void
   setCurrentTaskId: (taskId: string | undefined) => void
   reset: () => void
+}
+
+// 照片库状态（新增）
+export interface PhotoLibraryState {
+  libraryPhotos: PhotoUpload[]      // 照片库中的所有照片
+  persons: Person[]                  // 所有人物档案
+  selectedPhotoIds: Set<string>      // 当前选中的照片 ID
+  currentPersonFilter?: string       // 当前筛选的人物 ID
+
+  // 照片操作
+  addPhotoToLibrary: (photo: PhotoUpload) => Promise<void>
+  addPhotosToLibrary: (photos: PhotoUpload[]) => Promise<void>
+  updatePhoto: (id: string, data: Partial<PhotoUpload>) => Promise<void>
+  deletePhotoFromLibrary: (id: string) => Promise<void>
+  deletePhotosFromLibrary: (ids: string[]) => Promise<void>
+  loadLibraryPhotos: () => Promise<void>
+
+  // 人物操作
+  addPerson: (person: Omit<Person, 'id' | 'createdAt' | 'updatedAt'>) => Promise<Person>
+  updatePerson: (id: string, data: Partial<Person>) => Promise<void>
+  deletePerson: (id: string) => Promise<void>
+  loadPersons: () => Promise<void>
+
+  // 选择操作
+  setSelectedPhotoIds: (ids: Set<string>) => void
+  togglePhotoSelection: (id: string) => void
+  clearSelection: () => void
+
+  // 筛选操作
+  setPersonFilter: (personId?: string) => void
 }

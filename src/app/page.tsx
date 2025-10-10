@@ -1,10 +1,23 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Sparkles, Shield, Zap, Heart, Check, Clock, Github, FileText, Mail } from 'lucide-react'
+import { Sparkles, Shield, Zap, Heart, Check, Clock, Github, FileText, Mail, ImagePlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { usePhotoLibrary } from '@/lib/photoLibraryStore'
 
 export default function Home() {
+  const { libraryPhotos, loadLibraryPhotos } = usePhotoLibrary()
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    loadLibraryPhotos().then(() => setIsLoaded(true))
+  }, [])
+
+  const hasPhotos = libraryPhotos.length > 0
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-primary-50/30 to-secondary-50/30">
       {/* Hero Section */}
@@ -43,24 +56,54 @@ export default function Home() {
 
             {/* CTA 按钮组 */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-in-up">
-              <Link href="/upload">
-                <Button
-                  size="lg"
-                  className="gradient-ai text-white px-8 py-6 text-heading-xs shadow-ai hover:shadow-xl transition-all duration-300 hover:scale-105"
-                >
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  立即开始生成 AI 艺术照
-                </Button>
-              </Link>
-              <Link href="#features">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="px-8 py-6 text-heading-xs border-2 hover:bg-neutral-50 transition-all duration-300"
-                >
-                  了解更多
-                </Button>
-              </Link>
+              {isLoaded && (
+                hasPhotos ? (
+                  // 有照片：直接生成
+                  <>
+                    <Link href="/generation/select-photo">
+                      <Button
+                        size="lg"
+                        className="gradient-ai text-white px-8 py-6 text-heading-xs shadow-ai hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      >
+                        <Sparkles className="h-5 w-5 mr-2" />
+                        生成 AI 艺术照
+                      </Button>
+                    </Link>
+                    <Link href="/library">
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="px-8 py-6 text-heading-xs border-2 hover:bg-neutral-50 transition-all duration-300"
+                      >
+                        <ImagePlus className="h-5 w-5 mr-2" />
+                        照片库 ({libraryPhotos.length})
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  // 无照片：引导添加
+                  <>
+                    <Link href="/library">
+                      <Button
+                        size="lg"
+                        className="gradient-ai text-white px-8 py-6 text-heading-xs shadow-ai hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      >
+                        <ImagePlus className="h-5 w-5 mr-2" />
+                        开始添加照片
+                      </Button>
+                    </Link>
+                    <Link href="#features">
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="px-8 py-6 text-heading-xs border-2 hover:bg-neutral-50 transition-all duration-300"
+                      >
+                        了解更多
+                      </Button>
+                    </Link>
+                  </>
+                )
+              )}
             </div>
 
             {/* 提示信息 */}

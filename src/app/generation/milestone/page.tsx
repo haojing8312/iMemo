@@ -26,9 +26,9 @@ export default function MilestonePage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // 如果没有上传照片,返回上传页面
+    // 如果没有上传照片,返回照片选择页面
     if (!uploadedPhotos || uploadedPhotos.length === 0) {
-      router.push('/upload')
+      router.push('/generation/select-photo')
       return
     }
 
@@ -112,9 +112,9 @@ export default function MilestonePage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">选择人生里程碑</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">选择场景主题</h1>
           <p className="text-gray-600">
-            已上传 {uploadedPhotos.length} 张照片 • 选择您想要纪念的时刻
+            已选择 {uploadedPhotos.length} 张照片 • 步骤 2/3
           </p>
         </div>
 
@@ -226,11 +226,11 @@ export default function MilestonePage() {
 
         {/* Bottom navigation */}
         <div className="flex justify-between items-center mt-8">
-          <Button variant="outline" onClick={() => router.push('/upload')}>
+          <Button variant="outline" onClick={() => router.push('/generation/select-photo')}>
             返回上一步
           </Button>
           {!selectedMilestone && (
-            <p className="text-sm text-muted-foreground">请先选择一个里程碑</p>
+            <p className="text-sm text-muted-foreground">请先选择一个场景主题</p>
           )}
         </div>
       </div>

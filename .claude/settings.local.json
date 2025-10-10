@@ -9,7 +9,13 @@
       "Bash(npm run build:*)",
       "WebSearch",
       "WebFetch(domain:v2.tauri.app)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(timeout:*)",
+      "WebFetch(domain:zustand.docs.pmnd.rs)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
