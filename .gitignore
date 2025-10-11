@@ -53,3 +53,10 @@ next-env.d.ts
 # Temporary files
 /temp
 temp/
+
+# Face detection models (downloaded by postinstall script)
+/public/face-models/*.shard1
+/public/face-models/*-weights_manifest.json
+
+# Claude Code local settings
+.claude/settings.local.json
