@@ -122,8 +122,8 @@ iMemo 是一个注重隐私保护的 AI 原生相册应用，致力于为个人�
 
 1. **克隆仓库**
 ```bash
-git clone https://github.com/yourusername/imemo.git
-cd imemo
+git clone https://github.com/haojing8312/iMemo.git
+cd iMemo
 ```
 
 2. **安装依赖**
@@ -152,7 +152,7 @@ pnpm tauri build
 - 启动应用后，点击右上角"设置"图标
 - 在设置页面输入您的 SeeDream API Key
 - API Key 将安全保存在本地，不会上传到任何服务器
-- 获取 API Key: [火山引擎 - SeeDream API](https://www.volcengine.com/docs/6791/1308296)
+- 获取 API Key: [火山引擎 - SeeDream API](https://www.volcengine.com/docs/82379/1541523)
 
 ### 1. 上传照片
 - 点击"上传照片"选择个人照片
@@ -184,7 +184,7 @@ iMemo 将隐私保护作为核心设计原则：
 
 - ✅ **本地存储**: 所有照片和生成结果仅保存在您的设备
 - ✅ **无遥测**: 不收集任何用户行为数据
-- ✅ **透明 API**: AI 生成通过用户配置的 API 完成，可自建服务
+- ✅ **透明 API**: AI 生成通过用户配置的官方 API 完成
 - ✅ **开源**: 代码完全开源，接受社区审计
 
 ## 🤝 贡献指南
@@ -255,8 +255,8 @@ iMemo 采用 **双重许可模式**：
 ## 💬 联系方式
 
 ### 技术支持与反馈
-- 📮 问题反馈: [GitHub Issues](https://github.com/yourusername/imemo/issues)
-- 💡 功能建议: [GitHub Discussions](https://github.com/yourusername/imemo/discussions)
+- 📮 问题反馈: [GitHub Issues](https://github.com/haojing8312/iMemo/issues)
+- 💡 功能建议: [GitHub Discussions](https://github.com/haojing8312/iMemo/discussions)
 - 📧 商业咨询: 364430879@qq.com
 
 ### 微信联系

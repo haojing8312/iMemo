@@ -370,7 +370,7 @@ export default function Home() {
             {/* 导航链接 */}
             <div className="flex flex-wrap gap-6 justify-center">
               <a
-                href="https://github.com/yourusername/imemo/issues"
+                href="https://github.com/haojing8312/iMemo/issues"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-body-sm text-neutral-600 hover:text-primary-500 transition-colors flex items-center gap-2"
@@ -379,7 +379,7 @@ export default function Home() {
                 问题反馈
               </a>
               <a
-                href="https://github.com/yourusername/imemo/discussions"
+                href="https://github.com/haojing8312/iMemo/discussions"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-body-sm text-neutral-600 hover:text-primary-500 transition-colors flex items-center gap-2"
