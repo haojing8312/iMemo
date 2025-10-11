@@ -31,6 +31,46 @@ iMemo 是一个注重隐私保护的 AI 原生相册应用，致力于为个人�
 - 📋 节日祝福卡片生成
 - 📋 家庭成长记录可视化
 
+## 💡 项目背景
+
+### 从真实需求到 AI 实验
+
+这个项目诞生于一个普通家庭的真实场景：我家二宝快满 100 天了，照相馆打电话说可以上门拍摄纪念照。作为一名技术爱好者，我突然意识到——**为什么不用 AI 来生成这些纪念照片呢？**
+
+**时机的巧合**：
+- 恰逢 NanoBanana 和 SeeDream 4.0 等新一代图像生成模型发布
+- 这些模型具有**极强的人物一致性**能力
+- 完全可以基于少量参考照片，生成高质量的艺术照
+
+**技术实验的契机**：
+- 之前直接使用 Claude Code 开发产品时遇到不少问题
+- 发现 GitHub 上的 [Spec-Kit](https://github.com/zhoujiangang0911/Spec-Kit) 框架非常火热
+- 决定用这个真实需求来验证 **规范驱动开发（Spec-Driven Development）** 的能力
+
+### 🤖 100% AI 生成的代码
+
+**这个项目是一次完整的 AI 辅助开发实践**：
+
+- ✨ **开发工具**: [Claude Code](https://claude.ai/code) + [Spec-Kit](https://github.com/zhoujiangang0911/Spec-Kit) 框架
+- 🎯 **开发方式**: 规范驱动开发（Specification-Driven Development）
+- 💻 **代码生成**: **100% 由 AI 生成，本人没有手写一行代码**
+- ⏱️ **开发周期**: MVP 版本仅用 **4 天业余时间**完成
+
+这个项目证明了：
+1. **AI 可以独立完成复杂的桌面应用开发**（包括前端、后端、数据库、AI 集成等）
+2. **规范驱动开发 + AI 编程的组合威力巨大**
+3. **真实需求 + 合适的工具 = 高效的产品开发**
+
+### 🎓 开源的意义
+
+开源这个项目的目的：
+- 📚 为 AI 辅助开发提供一个**真实的参考案例**
+- 🔍 展示 Spec-Kit 框架在实际项目中的应用效果
+- 🤝 与社区分享经验，共同探索 AI 时代的软件开发新范式
+- 💡 启发更多人用 AI 解决生活中的实际问题
+
+如果你对 AI 辅助开发感兴趣，这个项目的完整开发历程可以作为很好的学习材料！
+
 ## 🚀 核心特性
 
 ### 当前功能（v0.1.0）
@@ -214,8 +254,18 @@ iMemo 采用 **双重许可模式**：
 
 ## 💬 联系方式
 
-- 问题反馈: [GitHub Issues](https://github.com/yourusername/imemo/issues)
-- 功能建议: [GitHub Discussions](https://github.com/yourusername/imemo/discussions)
+### 技术支持与反馈
+- 📮 问题反馈: [GitHub Issues](https://github.com/yourusername/imemo/issues)
+- 💡 功能建议: [GitHub Discussions](https://github.com/yourusername/imemo/discussions)
+- 📧 商业咨询: 364430879@qq.com
+
+### 微信联系
+
+<div align="center">
+  <img src="public/wechat.png" alt="微信二维码" width="200"/>
+  <p><strong>扫码添加微信</strong></p>
+  <p>获取使用帮助、参与社区讨论</p>
+</div>
 
 ---
 
