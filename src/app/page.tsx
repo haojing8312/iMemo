@@ -45,7 +45,7 @@ export default function Home() {
 
             {/* 副标题 */}
             <p className="text-heading-md text-neutral-700 mb-6 max-w-2xl mx-auto">
-              您的智能家庭相册管家
+              您的私人 AI 摄影师
             </p>
 
             {/* 价值主张 */}

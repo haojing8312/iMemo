@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <head>
-        <title>iMemo - 有爱的记忆 | AI 原生家庭相册</title>
+        <title>iMemo - 有爱的记忆 | 您的私人 AI 摄影师</title>
         <meta name="description" content="注重隐私保护的 AI 原生相册应用，本地存储，绝不上传云端" />
       </head>
       <body>
