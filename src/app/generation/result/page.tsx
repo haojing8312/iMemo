@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -26,6 +26,9 @@ export default function ResultPage() {
   const [autoSaved, setAutoSaved] = useState(false)
   const [autoSaving, setAutoSaving] = useState(false)
 
+  // 使用 ref 防止重复保存,不受 React Strict Mode 影响
+  const autoSaveExecutedRef = useRef(false)
+
   useEffect(() => {
     if (!currentTask) {
       router.push('/upload')
@@ -41,12 +44,21 @@ export default function ResultPage() {
       return
     }
 
+    // 使用 ref 防止重复执行
+    if (autoSaveExecutedRef.current) {
+      return
+    }
+
     // 检查是否已经保存过
     const savedFlag = localStorage.getItem(`task_${currentTask.id}_auto_saved`)
     if (savedFlag) {
       setAutoSaved(true)
       return
     }
+
+    // 标记已执行
+    autoSaveExecutedRef.current = true
+    setAutoSaving(true)
 
     // 执行自动保存
     autoSaveToLibrary()
@@ -57,11 +69,19 @@ export default function ResultPage() {
 
     try {
       const task = await getTaskById(currentTask.id)
-      setResults(task.results)
+
+      // 按 imageId 去重,防止重复数据
+      const uniqueResults = Array.from(
+        new Map(task.results.map((r: GenerationResult) => [r.imageId, r])).values()
+      )
+
+      console.log(`[ResultPage] 加载结果: ${uniqueResults.length} 张图片 (原始: ${task.results.length})`)
+
+      setResults(uniqueResults)
 
       // Set default tab to first style or 'all'
-      if (task.results.length > 0) {
-        const firstStyleId = task.results[0].styleId
+      if (uniqueResults.length > 0) {
+        const firstStyleId = uniqueResults[0].styleId
         setSelectedTab(firstStyleId)
       }
     } catch (error) {
@@ -76,23 +96,60 @@ export default function ResultPage() {
       setAutoSaving(true)
       console.log('[ResultPage] 开始自动保存到照片库...')
 
-      // 将 GenerationResult 转换为 GeneratedImage 格式
-      const generatedImages: GeneratedImage[] = results.map((result) => ({
-        id: result.imageId,
-        taskId: currentTask.id,
-        styleId: result.styleId,
-        sequenceNum: result.sequenceNumber,
-        filePath: result.dataUrl || '', // 使用 dataUrl 作为临时路径
-        fileSize: result.fileSize || 0,
-        width: result.width,
-        height: result.height,
-        createdAt: result.generatedAt,
-        isSavedToAlbum: result.exported || false,
-        albumSavePath: result.exportedPath,
-      }))
+      // 动态导入文件工具
+      const { copyBlobToDataDir } = await import('@/lib/fileUtils')
 
-      // 调用保存服务
-      const savedCount = saveAIGeneratedPhotos(
+      // 下载并保存 AI 生成的图片到本地
+      const generatedImages: GeneratedImage[] = []
+
+      for (let i = 0; i < results.length; i++) {
+        const result = results[i]
+
+        try {
+          console.log(`[ResultPage] 正在下载图片 ${i + 1}/${results.length}: ${result.imageUrl}`)
+
+          // 1. 从 imageUrl 下载图片
+          const response = await fetch(result.imageUrl)
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+          const blob = await response.blob()
+
+          // 2. 生成文件名
+          const fileName = `${result.styleName}-${result.index + 1}.png`
+
+          // 3. 保存到本地应用数据目录
+          const localPath = await copyBlobToDataDir(blob, fileName, 'ai-photos')
+
+          console.log(`[ResultPage] 图片已保存: ${localPath}`)
+
+          // 4. 构造 GeneratedImage
+          generatedImages.push({
+            id: result.imageId,
+            taskId: currentTask.id,
+            styleId: result.styleId,
+            sequenceNum: result.index + 1, // 修复: 使用 index + 1
+            filePath: localPath, // 修复: 使用本地路径
+            fileSize: blob.size,
+            width: result.width,
+            height: result.height,
+            createdAt: result.generatedAt,
+            isSavedToAlbum: false,
+          })
+        } catch (error) {
+          console.error(`[ResultPage] 下载图片失败 (${i + 1}/${results.length}):`, error)
+          // 继续处理下一张图片
+        }
+      }
+
+      if (generatedImages.length === 0) {
+        throw new Error('没有成功下载任何图片')
+      }
+
+      console.log(`[ResultPage] 成功下载 ${generatedImages.length}/${results.length} 张图片`)
+
+      // 5. 保存到照片库
+      const savedCount = await saveAIGeneratedPhotos(
         currentTask.id,
         currentTask.milestoneName,
         'medium', // 默认相似度
@@ -111,6 +168,7 @@ export default function ResultPage() {
       setAutoSaving(false)
     } catch (error) {
       console.error('[ResultPage] 自动保存失败:', error)
+      alert(`自动保存失败: ${error instanceof Error ? error.message : '未知错误'}`)
       setAutoSaving(false)
     }
   }
