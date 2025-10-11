@@ -202,16 +202,46 @@ export default function StyleSelectionPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {/* Style preview image placeholder */}
-                  <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                    <span className="text-muted-foreground text-sm">
-                      {style.name} 预览
-                    </span>
+                  {/* Style preview image */}
+                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                    {style.exampleImage ? (
+                      <img
+                        src={style.exampleImage}
+                        alt={`${style.name} 预览`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // 图片加载失败时显示占位符
+                          e.currentTarget.style.display = 'none'
+                          if (e.currentTarget.parentElement) {
+                            e.currentTarget.parentElement.innerHTML = `
+                              <div class="flex items-center justify-center h-full">
+                                <span class="text-muted-foreground text-sm">${style.name} 预览</span>
+                              </div>
+                            `
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <span className="text-muted-foreground text-sm">
+                          {style.name} 预览
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    {style.tags?.slice(0, 3).map(tag => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
                   </div>
 
                   {/* Default badge */}
                   {selectedMilestone.defaultStyleIds.includes(style.id) && (
-                    <Badge variant="secondary" className="mt-3">
+                    <Badge variant="secondary" className="mt-2">
                       <Sparkles className="h-3 w-3 mr-1" />
                       推荐
                     </Badge>
