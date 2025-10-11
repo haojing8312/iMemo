@@ -30,6 +30,10 @@
       "allow": [
         { "path": "$APPDATA/**" }
       ]
-    }
+    },
+    "sql:default",
+    "sql:allow-load",
+    "sql:allow-execute",
+    "sql:allow-select"
   ]
 }

@@ -148,6 +148,45 @@ export async function saveDataUrlImageToLocal(
 }
 
 /**
+ * 将用户选择的照片复制到应用数据目录
+ * @param sourcePath 用户选择的原始路径
+ * @returns 复制后的新路径（在数据目录中）
+ */
+export async function copyPhotoToDataDir(sourcePath: string): Promise<string> {
+  const { readFile } = await import('@tauri-apps/plugin-fs')
+
+  try {
+    // 读取原始文件
+    const fileData = await readFile(sourcePath)
+
+    // 确定目标目录
+    const settings = loadSettings()
+    const root = settings.dataRootDir && settings.dataRootDir.length > 0
+      ? settings.dataRootDir
+      : await getAppDataPath()
+
+    // 创建 photos 目录
+    const photosDir = await join(root, 'HomeMemo', 'photos')
+    await ensureDir(photosDir)
+
+    // 生成新文件名（保留原始文件名，添加时间戳避免冲突）
+    const originalName = sourcePath.split(/[/\\]/).pop() || 'photo.jpg'
+    const timestamp = Date.now()
+    const newFilename = `${timestamp}_${originalName}`
+    const newPath = await join(photosDir, newFilename)
+
+    // 写入文件
+    await writeFile(newPath, fileData)
+
+    console.log(`照片已复制: ${sourcePath} -> ${newPath}`)
+    return newPath
+  } catch (error) {
+    console.error(`复制照片失败:`, error)
+    throw new Error('复制照片失败')
+  }
+}
+
+/**
  * 保存图片到用户相册 (Pictures目录)
  * @param sourcePath 源文件路径
  * @param albumFilename 相册文件名

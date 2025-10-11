@@ -20,6 +20,7 @@ import { useAppStore } from '@/lib/store'
 import { usePhotoLibrary, useFilteredPhotos } from '@/lib/photoLibraryStore'
 import { getImageMetadata, getFileSize, checkImageQuality, detectFaces } from '@/lib/imageUtils'
 import { PhotoValidator } from '@/lib/validators'
+import { copyPhotoToDataDir } from '@/lib/fileUtils'
 import type { PhotoUpload } from '@/lib/types'
 
 interface PhotoWithValidation extends PhotoUpload {
@@ -105,14 +106,27 @@ export default function SelectPhotoPage() {
     setTempPhotos(prev => [...prev, tempPhoto])
 
     try {
-      // 读取文件信息
+      console.log('[SelectPhoto] 处理临时照片:', filePath)
+
+      // 1. 扩展 Tauri 文件系统权限 (读取原始文件需要)
+      const { invoke } = await import('@tauri-apps/api/core')
+      const { dirname } = await import('@tauri-apps/api/path')
+      const parentDir = await dirname(filePath)
+      await invoke('expand_scope', { folderPath: parentDir })
+      console.log('[SelectPhoto] 已扩展权限:', parentDir)
+
+      // 2. 复制照片到数据目录
+      const copiedPath = await copyPhotoToDataDir(filePath)
+      console.log('[SelectPhoto] 照片已复制到数据目录:', copiedPath)
+
+      // 读取文件信息（使用复制后的路径）
       const [metadata, fileSize] = await Promise.all([
-        getImageMetadata(filePath),
-        getFileSize(filePath)
+        getImageMetadata(copiedPath),
+        getFileSize(copiedPath)
       ])
 
       const photo: Partial<PhotoUpload> = {
-        filePath,
+        filePath: copiedPath,  // 使用复制后的路径
         originalName: filePath.split(/[/\\]/).pop() || 'unknown.jpg',
         width: metadata.width,
         height: metadata.height,
@@ -134,8 +148,8 @@ export default function SelectPhotoPage() {
         return
       }
 
-      // 质量检测
-      const qualityCheck = await checkImageQuality(filePath)
+      // 质量检测（使用复制后的路径）
+      const qualityCheck = await checkImageQuality(copiedPath)
       if (!qualityCheck.isValid) {
         setTempPhotos(prev => prev.map(p =>
           p.id === tempId
@@ -145,8 +159,8 @@ export default function SelectPhotoPage() {
         return
       }
 
-      // 人脸检测
-      const faceDetection = await detectFaces(filePath)
+      // 人脸检测（使用复制后的路径）
+      const faceDetection = await detectFaces(copiedPath)
       if (!faceDetection.isValid) {
         setTempPhotos(prev => prev.map(p =>
           p.id === tempId

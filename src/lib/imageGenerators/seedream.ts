@@ -54,12 +54,35 @@ async function imageToBase64(filePath: string): Promise<string> {
     return base64
   } catch (error: any) {
     console.error('[SeeDream] Failed to convert image to base64:', error)
+
+    // 详细的错误信息
+    const errorMsg = error?.message || error?.toString() || '未知错误'
     console.error('[SeeDream] Error details:', {
-      message: error.message,
-      name: error.name,
-      stack: error.stack,
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack,
+      toString: error?.toString(),
     })
-    throw new Error(`图片读取失败: ${error.message || '未知错误'}`)
+
+    // 判断是否是权限问题
+    if (errorMsg.includes('forbidden') || errorMsg.includes('permission') || errorMsg.includes('access denied')) {
+      throw new Error(
+        `文件访问被拒绝\n` +
+        `路径: ${filePath}\n` +
+        `这可能是因为照片未正确保存到应用数据目录。\n` +
+        `请尝试:\n` +
+        `1. 从照片库中删除该照片\n` +
+        `2. 重新添加照片到照片库\n` +
+        `3. 再次尝试生成`
+      )
+    }
+
+    // 判断是否是文件不存在
+    if (errorMsg.includes('not found') || errorMsg.includes('No such file')) {
+      throw new Error(`照片文件不存在: ${filePath}\n请重新选择照片`)
+    }
+
+    throw new Error(`图片读取失败: ${errorMsg}`)
   }
 }
 
