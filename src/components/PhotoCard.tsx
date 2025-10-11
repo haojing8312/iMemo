@@ -53,10 +53,15 @@ export function PhotoCard({
     return `${(bytes / 1024 / 1024).toFixed(1)}MB`
   }
 
-  const handleCardClick = () => {
+  const handleCardClick = (e: React.MouseEvent) => {
+    // 阻止事件冒泡
+    e.stopPropagation()
+
     if (showCheckbox && onSelect) {
+      // 在多选模式下,点击卡片直接切换选择状态
       onSelect()
     } else if (onClick) {
+      // 在非多选模式下,点击卡片打开查看器
       onClick()
     }
   }

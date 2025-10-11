@@ -423,27 +423,38 @@ export async function saveAIGeneratedPhotos(
   sourcePhotos: PhotoUpload[]
 ): Promise<number> {
   try {
-    const aiPhotos: PhotoUpload[] = results.map((result) => ({
-      id: crypto.randomUUID(),
-      filePath: result.filePath,
-      originalName: `${getStyleNameFromId(result.styleId)}-${result.sequenceNum}.png`,
-      width: result.width || 1024,
-      height: result.height || 1536,
-      fileSize: result.fileSize,
-      format: 'PNG',
-      uploadedAt: result.createdAt,
-      isCropped: false,
-      isInLibrary: true,
-      isAIGenerated: true,
-      // 继承第一张原始照片的人物关联
-      personId: sourcePhotos[0]?.personId,
-      personName: sourcePhotos[0]?.personName,
-    }))
+    const aiPhotos: PhotoUpload[] = results.map((result) => {
+      const styleName = getStyleNameFromId(result.styleId)
+      return {
+        id: crypto.randomUUID(),
+        filePath: result.filePath,
+        originalName: `${styleName}-${result.sequenceNum}.png`,
+        width: result.width || 1024,
+        height: result.height || 1536,
+        fileSize: result.fileSize,
+        format: 'PNG',
+        uploadedAt: result.createdAt,
+        isCropped: false,
+        isInLibrary: true,
+        isAIGenerated: true,
+        // 继承第一张原始照片的人物关联
+        personId: sourcePhotos[0]?.personId,
+        personName: sourcePhotos[0]?.personName,
+        // 添加 AI 元数据
+        aiMetadata: {
+          styleId: result.styleId,
+          styleName: styleName,
+        },
+      }
+    })
 
     // 批量添加到照片库
     await addPhotosToLibrary(aiPhotos)
 
-    // 保存 AI 元数据
+    // 保存 AI 元数据 - 暂时跳过外键约束问题,等数据库架构修复后再启用
+    // TODO: 修复外键约束,确保 styleId 存在于 style_templates 表中
+    // 或者修改数据库架构,移除外键约束
+    /*
     for (let i = 0; i < aiPhotos.length; i++) {
       const photo = aiPhotos[i]
       const result = results[i]
@@ -457,6 +468,7 @@ export async function saveAIGeneratedPhotos(
         taskId,
       })
     }
+    */
 
     console.log(`[PhotoLibraryService] 已保存 ${aiPhotos.length} 张 AI 照片到照片库`)
 

@@ -23,6 +23,7 @@ export default function LibraryPage() {
     selectedPhotoIds,
     addPhotosToLibrary,
     deletePhotoFromLibrary,
+    deletePhotosFromLibrary,
     loadLibraryPhotos,
     loadPersons,
     setPersonFilter,
@@ -141,12 +142,13 @@ export default function LibraryPage() {
   const handleBatchDelete = async () => {
     if (selectedPhotoIds.size === 0) return
 
-    if (confirm(`确定要删除选中的 ${selectedPhotoIds.size} 张照片吗？`)) {
-      const ids = Array.from(selectedPhotoIds)
-      for (const id of ids) {
-        await deletePhotoFromLibrary(id)
-      }
-      clearSelection()
+    // 先获取选中的照片ID数组和数量,避免在确认对话框显示时状态被修改
+    const idsToDelete = Array.from(selectedPhotoIds)
+    const count = idsToDelete.length
+
+    if (confirm(`确定要删除选中的 ${count} 张照片吗？`)) {
+      // 使用批量删除函数,一次性删除所有照片,避免逐个删除时UI闪烁
+      await deletePhotosFromLibrary(idsToDelete)
     }
   }
 
@@ -307,8 +309,8 @@ export default function LibraryPage() {
         <PhotoGrid
           photos={filteredPhotos}
           selectedPhotoIds={selectedPhotoIds}
-          showCheckbox={false}
-          showActions={true}
+          showCheckbox={true}
+          showActions={false}
           onPhotoSelect={togglePhotoSelection}
           onPhotoDelete={handleDeletePhoto}
           onPhotoClick={handlePhotoClick}

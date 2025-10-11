@@ -148,6 +148,47 @@ export async function saveDataUrlImageToLocal(
 }
 
 /**
+ * 将 Blob 数据保存到应用数据目录
+ * @param blob Blob 数据
+ * @param fileName 文件名
+ * @param subDir 子目录 (可选,默认为 'ai-photos')
+ * @returns 本地文件路径
+ */
+export async function copyBlobToDataDir(
+  blob: Blob,
+  fileName: string,
+  subDir: string = 'ai-photos'
+): Promise<string> {
+  try {
+    // 将 Blob 转换为 Uint8Array
+    const arrayBuffer = await blob.arrayBuffer()
+    const uint8Array = new Uint8Array(arrayBuffer)
+
+    // 确定目标目录
+    const settings = loadSettings()
+    const root = settings.dataRootDir && settings.dataRootDir.length > 0
+      ? settings.dataRootDir
+      : await getAppDataPath()
+
+    // 创建子目录
+    const targetDir = await join(root, 'HomeMemo', subDir)
+    await ensureDir(targetDir)
+
+    // 生成目标路径
+    const targetPath = await join(targetDir, fileName)
+
+    // 写入文件
+    await writeFile(targetPath, uint8Array)
+
+    console.log(`[FileUtils] Blob 已保存: ${targetPath}`)
+    return targetPath
+  } catch (error) {
+    console.error(`[FileUtils] 保存 Blob 失败:`, error)
+    throw new Error('保存文件失败')
+  }
+}
+
+/**
  * 将用户选择的照片复制到应用数据目录
  * @param sourcePath 用户选择的原始路径
  * @returns 复制后的新路径（在数据目录中）

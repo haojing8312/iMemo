@@ -23,14 +23,14 @@ export function PhotoGrid({
   selectedPhotoIds = new Set(),
   showCheckbox = false,
   showActions = false,
-  maxSelection = 5,
+  maxSelection,
   onPhotoSelect,
   onPhotoDelete,
   onPhotoClick,
   emptyMessage = '暂无照片',
 }: PhotoGridProps) {
-  // 判断是否可以选择更多照片
-  const canSelectMore = selectedPhotoIds.size < maxSelection
+  // 判断是否可以选择更多照片(如果设置了maxSelection)
+  const canSelectMore = maxSelection === undefined || selectedPhotoIds.size < maxSelection
 
   const handlePhotoSelect = (photoId: string) => {
     // 如果已选中，可以取消选中

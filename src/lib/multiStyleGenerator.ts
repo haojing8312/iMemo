@@ -70,41 +70,56 @@ export async function generateMultiStyle(
       console.log(`[MultiStyleGenerator] Starting style: ${style.name} (${style.id})`)
       console.log(`[MultiStyleGenerator] Prompt: ${prompt}`)
 
-      // Generate images for this style (using existing API)
-      // NOTE: API expects an object param; extract urls from response.images
-      const resp: any = await generateImages({
-        photoPath,
-        prompt,
-        numImages: imagesPerStyle,
-      })
-      const imageUrls: string[] = (resp?.images || []).map((img: any) => img.url)
+      // Generate images one by one to enable per-image progress updates
+      // 逐张生成图片,每生成一张就更新进度
+      const styleResults: GenerationResult[] = []
 
-      // 检查是否部分成功
-      if (resp.partialSuccess) {
-        console.log(`[MultiStyleGenerator] ⚠️ Partial success for style: ${style.name}`)
-        console.log(`  - Success: ${resp.successCount}/${imagesPerStyle} images`)
-        console.log(`  - Failed: ${resp.failCount} images`)
+      for (let i = 0; i < imagesPerStyle; i++) {
+        try {
+          console.log(`[MultiStyleGenerator] Generating image ${i + 1}/${imagesPerStyle} for style: ${style.name}`)
+
+          // 每次生成1张图片
+          const resp: any = await generateImages({
+            photoPath,
+            prompt,
+            numImages: 1,
+          })
+
+          const imageUrls: string[] = (resp?.images || []).map((img: any) => img.url)
+
+          if (imageUrls.length > 0) {
+            // Convert to GenerationResult format
+            const result: GenerationResult = {
+              imageId: crypto.randomUUID(),
+              styleId: style.id,
+              styleName: style.name,
+              imageUrl: imageUrls[0],
+              prompt: prompt,
+              generatedAt: Date.now(),
+              favorited: false,
+              exported: false,
+              index: i
+            }
+
+            styleResults.push(result)
+            allResults.push(result)
+
+            console.log(`[MultiStyleGenerator] ✓ Image ${i + 1}/${imagesPerStyle} generated for ${style.name}`)
+          }
+
+          // 每生成一张照片就更新进度
+          completedImages++
+          onProgress?.(completedImages, totalImages)
+
+        } catch (imageError) {
+          console.error(`[MultiStyleGenerator] ✗ Failed to generate image ${i + 1}/${imagesPerStyle} for ${style.name}`, imageError)
+          // 单张图片失败,继续生成下一张
+          completedImages++
+          onProgress?.(completedImages, totalImages)
+        }
       }
 
-      // Convert to GenerationResult format
-      const styleResults: GenerationResult[] = imageUrls.map((url, index) => ({
-        imageId: crypto.randomUUID(),
-        styleId: style.id,
-        styleName: style.name,
-        imageUrl: url,
-        prompt: prompt,
-        generatedAt: Date.now(),
-        favorited: false,
-        exported: false,
-        index
-      }))
-
-      allResults.push(...styleResults)
       completedStyles++
-
-      // Update progress
-      completedImages += imagesPerStyle
-      onProgress?.(completedImages, totalImages)
 
       // Notify style completion
       onStyleComplete?.(style.id, style.name, styleResults)
@@ -122,9 +137,7 @@ export async function generateMultiStyle(
       // Notify style failure
       onStyleFailed?.(style.id, style.name, errorObj)
 
-      // Still update progress (count failed images as "completed" for progress bar)
-      completedImages += imagesPerStyle
-      onProgress?.(completedImages, totalImages)
+      // 注意: 进度更新已在内层循环中处理,这里不需要重复更新
     }
   }
 

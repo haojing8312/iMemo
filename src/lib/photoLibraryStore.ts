@@ -186,10 +186,8 @@ export const usePhotoLibrary = create<PhotoLibraryState>((set, get) => ({
     if (newSet.has(id)) {
       newSet.delete(id)
     } else {
-      // 限制最多选择 5 张
-      if (newSet.size < 5) {
-        newSet.add(id)
-      }
+      // 无限制选择
+      newSet.add(id)
     }
 
     set({ selectedPhotoIds: newSet })

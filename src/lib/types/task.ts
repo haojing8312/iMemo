@@ -59,8 +59,11 @@ export const GenerationResultSchema = z.object({
   imageId: z.string(), // UUID v4
   styleId: z.string(),
   styleName: z.string(),
-  sequenceNumber: z.number().int().positive(), // 1-4 for each style
-  dataUrl: z.string(), // Base64 data URL
+  index: z.number().int().nonnegative(), // 图片索引 (0-3)
+  imageUrl: z.string(), // 图片 URL (远程或本地)
+  prompt: z.string().optional(), // 生成提示词
+  sequenceNumber: z.number().int().positive().optional(), // 1-4 for each style (可选,用于兼容)
+  dataUrl: z.string().optional(), // Base64 data URL (可选,用于预览)
   width: z.number().int().positive(),
   height: z.number().int().positive(),
   fileSize: z.number().int().positive(),
