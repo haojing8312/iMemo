@@ -29,7 +29,7 @@ docs/                 # 文档
 
 ```bash
 # 开发模式
-npm run dev
+pnpm tauri dev
 
 # 构建生产版本
 npm run build

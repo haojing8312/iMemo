@@ -29,6 +29,23 @@ export interface PhotoUpload {
   capturedAt?: number      // 拍摄时间（从 EXIF 读取或手动设置）
   croppedPath?: string     // 裁剪后的文件路径（如果有）
   isInLibrary?: boolean    // 是否保存到照片库（区分临时上传）
+
+  // AI 生成相关字段
+  isAIGenerated?: boolean  // 是否为 AI 生成照片
+  aiMetadata?: AIPhotoMetadata  // AI 生成元数据（仅当 isAIGenerated=true 时有值）
+}
+
+// AI 照片元数据
+export interface AIPhotoMetadata {
+  taskId: string                  // 生成任务 ID
+  styleId: string                 // 风格 ID
+  styleName: string               // 风格名称（冗余，方便展示）
+  milestoneName?: string          // 场景/里程碑名称
+  similarityLevel: SimilarityLevel // 相似度级别
+  sourcePhotoIds: string[]        // 使用的原始照片 ID 列表
+  sequenceNumber: number          // 该风格的第几张图 (1-4)
+  generatedAt: number             // 生成时间戳
+  isFavorited?: boolean           // 是否收藏（从 GeneratedImage 同步）
 }
 
 export interface StyleTemplate {
@@ -133,12 +150,17 @@ export interface AppStore {
   reset: () => void
 }
 
+// 照片类型筛选
+export type PhotoTypeFilter = 'all' | 'original' | 'ai'
+
 // 照片库状态（新增）
 export interface PhotoLibraryState {
   libraryPhotos: PhotoUpload[]      // 照片库中的所有照片
   persons: Person[]                  // 所有人物档案
   selectedPhotoIds: Set<string>      // 当前选中的照片 ID
   currentPersonFilter?: string       // 当前筛选的人物 ID
+  currentTypeFilter: PhotoTypeFilter // 当前照片类型筛选
+  currentStyleFilter?: string        // 当前风格筛选（仅对 AI 照片有效）
 
   // 照片操作
   addPhotoToLibrary: (photo: PhotoUpload) => Promise<void>
@@ -161,4 +183,6 @@ export interface PhotoLibraryState {
 
   // 筛选操作
   setPersonFilter: (personId?: string) => void
+  setTypeFilter: (type: PhotoTypeFilter) => void
+  setStyleFilter: (styleId?: string) => void
 }

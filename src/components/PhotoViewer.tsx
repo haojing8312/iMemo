@@ -5,9 +5,10 @@
 
 import { useState, useEffect } from 'react'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { X, ChevronLeft, ChevronRight, Trash2, User } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Trash2, User, Palette, Calendar, Image } from 'lucide-react'
 import type { PhotoUpload } from '@/lib/types'
 import { Button } from '@/components/ui/button'
+import { AIBadge } from '@/components/AIBadge'
 
 interface PhotoViewerProps {
   photos: PhotoUpload[]
@@ -164,12 +165,62 @@ export function PhotoViewer({
 
         {/* 底部信息栏 */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-          <div className="space-y-2">
-            {/* 文件名 */}
-            <p className="text-heading-sm font-semibold">
-              {currentPhoto.originalName}
-            </p>
+          <div className="space-y-3">
+            {/* 标题行 */}
+            <div className="flex items-center gap-3">
+              {currentPhoto.isAIGenerated && <AIBadge size="md" />}
+              <p className="text-heading-sm font-semibold">
+                {currentPhoto.originalName}
+              </p>
+            </div>
 
+            {/* AI 元数据（如果是 AI 照片） */}
+            {currentPhoto.isAIGenerated && currentPhoto.aiMetadata && (
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 space-y-2">
+                <p className="text-xs text-white/60 uppercase tracking-wide font-medium">AI 生成信息</p>
+                <div className="grid grid-cols-2 gap-3 text-body-sm">
+                  {/* 风格 */}
+                  <div className="flex items-center gap-2">
+                    <Palette className="h-4 w-4 text-purple-300" />
+                    <div>
+                      <p className="text-white/60 text-xs">风格</p>
+                      <p className="text-white font-medium">{currentPhoto.aiMetadata.styleName}</p>
+                    </div>
+                  </div>
+
+                  {/* 场景/里程碑 */}
+                  {currentPhoto.aiMetadata.milestoneName && (
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-blue-300" />
+                      <div>
+                        <p className="text-white/60 text-xs">场景</p>
+                        <p className="text-white font-medium">{currentPhoto.aiMetadata.milestoneName}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 序号 */}
+                  <div className="flex items-center gap-2">
+                    <Image className="h-4 w-4 text-green-300" />
+                    <div>
+                      <p className="text-white/60 text-xs">序号</p>
+                      <p className="text-white font-medium">第 {currentPhoto.aiMetadata.sequenceNumber} 张</p>
+                    </div>
+                  </div>
+
+                  {/* 生成时间 */}
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-orange-300" />
+                    <div>
+                      <p className="text-white/60 text-xs">生成时间</p>
+                      <p className="text-white font-medium">{formatDate(currentPhoto.aiMetadata.generatedAt)}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 基本信息 */}
             <div className="flex flex-wrap items-center gap-4 text-body-sm text-white/80">
               {/* 人物信息 */}
               {currentPhoto.personName && (
@@ -187,8 +238,10 @@ export function PhotoViewer({
               {/* 大小 */}
               <span>{formatFileSize(currentPhoto.fileSize)}</span>
 
-              {/* 上传时间 */}
-              <span>{formatDate(currentPhoto.uploadedAt)}</span>
+              {/* 上传/生成时间 */}
+              {!currentPhoto.isAIGenerated && (
+                <span>{formatDate(currentPhoto.uploadedAt)}</span>
+              )}
             </div>
 
             {/* 标签 */}

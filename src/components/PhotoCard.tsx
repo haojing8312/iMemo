@@ -5,10 +5,11 @@
 
 import { useState } from 'react'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { Check, Trash2, User, Calendar } from 'lucide-react'
+import { Check, Trash2, User, Calendar, Palette } from 'lucide-react'
 import type { PhotoUpload } from '@/lib/types'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { AIBadge } from '@/components/AIBadge'
 
 interface PhotoCardProps {
   photo: PhotoUpload
@@ -68,6 +69,13 @@ export function PhotoCard({
       onClick={handleCardClick}
     >
       <CardContent className="p-0">
+        {/* AI 标识 */}
+        {photo.isAIGenerated && !showCheckbox && (
+          <div className="absolute top-2 left-2 z-10">
+            <AIBadge size="sm" />
+          </div>
+        )}
+
         {/* 复选框 */}
         {showCheckbox && (
           <div
@@ -138,6 +146,14 @@ export function PhotoCard({
             <Calendar className="h-3 w-3" />
             <span>{formatDate(photo.uploadedAt)}</span>
           </div>
+
+          {/* AI 风格信息 */}
+          {photo.isAIGenerated && photo.aiMetadata && (
+            <div className="flex items-center gap-1 text-xs text-purple-600">
+              <Palette className="h-3 w-3" />
+              <span>{photo.aiMetadata.styleName}</span>
+            </div>
+          )}
 
           {/* 照片尺寸和大小 */}
           {photo.width > 0 && (

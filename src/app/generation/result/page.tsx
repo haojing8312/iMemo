@@ -6,19 +6,25 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { Download, Home, Heart, Check, AlertCircle, Sparkles, FolderOpen, Share2 } from 'lucide-react'
+import { Download, Home, Heart, Check, AlertCircle, Sparkles, FolderOpen, Share2, CheckCircle, Library } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { getTaskById, toggleFavorite } from '@/lib/taskService'
 import { saveImageToAlbum, saveBatchToAlbum } from '@/lib/exportService'
 import type { GenerationResult } from '@/lib/types/task'
+import type { GeneratedImage } from '@/lib/types'
+import { saveAIGeneratedPhotos } from '@/lib/photoLibraryService'
+import { usePhotoLibrary } from '@/lib/photoLibraryStore'
 
 export default function ResultPage() {
   const router = useRouter()
-  const { currentTask, reset } = useAppStore()
+  const { currentTask, reset, uploadedPhotos } = useAppStore()
+  const { loadLibraryPhotos } = usePhotoLibrary()
 
   const [results, setResults] = useState<GenerationResult[]>([])
   const [selectedTab, setSelectedTab] = useState<string>('all')
   const [refreshKey, setRefreshKey] = useState(0)
+  const [autoSaved, setAutoSaved] = useState(false)
+  const [autoSaving, setAutoSaving] = useState(false)
 
   useEffect(() => {
     if (!currentTask) {
@@ -28,6 +34,23 @@ export default function ResultPage() {
 
     loadResults()
   }, [currentTask?.id, refreshKey])
+
+  // 自动保存到照片库
+  useEffect(() => {
+    if (!currentTask || results.length === 0 || autoSaved || autoSaving) {
+      return
+    }
+
+    // 检查是否已经保存过
+    const savedFlag = localStorage.getItem(`task_${currentTask.id}_auto_saved`)
+    if (savedFlag) {
+      setAutoSaved(true)
+      return
+    }
+
+    // 执行自动保存
+    autoSaveToLibrary()
+  }, [results, currentTask?.id])
 
   const loadResults = async () => {
     if (!currentTask) return
@@ -44,6 +67,56 @@ export default function ResultPage() {
     } catch (error) {
       console.error('加载结果失败:', error)
     }
+  }
+
+  const autoSaveToLibrary = async () => {
+    if (!currentTask || results.length === 0) return
+
+    try {
+      setAutoSaving(true)
+      console.log('[ResultPage] 开始自动保存到照片库...')
+
+      // 将 GenerationResult 转换为 GeneratedImage 格式
+      const generatedImages: GeneratedImage[] = results.map((result) => ({
+        id: result.imageId,
+        taskId: currentTask.id,
+        styleId: result.styleId,
+        sequenceNum: result.sequenceNumber,
+        filePath: result.dataUrl || '', // 使用 dataUrl 作为临时路径
+        fileSize: result.fileSize || 0,
+        width: result.width,
+        height: result.height,
+        createdAt: result.generatedAt,
+        isSavedToAlbum: result.exported || false,
+        albumSavePath: result.exportedPath,
+      }))
+
+      // 调用保存服务
+      const savedCount = saveAIGeneratedPhotos(
+        currentTask.id,
+        currentTask.milestoneName,
+        'medium', // 默认相似度
+        generatedImages,
+        uploadedPhotos
+      )
+
+      console.log(`[ResultPage] 已自动保存 ${savedCount} 张照片到照片库`)
+
+      // 刷新照片库
+      await loadLibraryPhotos()
+
+      // 标记已保存
+      localStorage.setItem(`task_${currentTask.id}_auto_saved`, 'true')
+      setAutoSaved(true)
+      setAutoSaving(false)
+    } catch (error) {
+      console.error('[ResultPage] 自动保存失败:', error)
+      setAutoSaving(false)
+    }
+  }
+
+  const handleGoToLibrary = () => {
+    router.push('/library')
   }
 
   const handleToggleFavorite = async (imageId: string) => {
@@ -177,6 +250,42 @@ export default function ResultPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
       <div className="max-w-7xl mx-auto">
+        {/* 自动保存成功提示 */}
+        {autoSaved && (
+          <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <div>
+                <p className="text-sm font-medium text-green-900">
+                  ✅ 已自动保存 {totalImages} 张艺术照到照片库
+                </p>
+                <p className="text-xs text-green-700 mt-1">
+                  您可以在照片库中查看和管理这些AI生成的照片
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleGoToLibrary}
+              className="border-green-300 hover:bg-green-100"
+            >
+              <Library className="h-4 w-4 mr-2" />
+              前往照片库
+            </Button>
+          </div>
+        )}
+
+        {/* 自动保存中提示 */}
+        {autoSaving && (
+          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center gap-3">
+            <Sparkles className="h-5 w-5 text-blue-600 animate-pulse" />
+            <p className="text-sm text-blue-900">
+              正在自动保存到照片库...
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">

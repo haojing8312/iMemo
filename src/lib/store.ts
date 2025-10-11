@@ -71,11 +71,29 @@ export const useAppStore = create<ExtendedAppStore>((set) => ({
     }),
 
   updateProgress: (progress) =>
-    set((state) => ({
-      taskProgress: state.taskProgress
-        ? { ...state.taskProgress, ...progress }
-        : null,
-    })),
+    set((state) => {
+      // 如果没有当前任务,不更新
+      if (!state.currentTask) {
+        return {
+          taskProgress: state.taskProgress
+            ? { ...state.taskProgress, ...progress }
+            : null,
+        }
+      }
+
+      // 同时更新 currentTask.progress 和 taskProgress,保持数据一致性
+      const updatedProgress = state.currentTask.progress
+        ? { ...state.currentTask.progress, ...progress }
+        : progress
+
+      return {
+        currentTask: {
+          ...state.currentTask,
+          progress: updatedProgress,
+        },
+        taskProgress: updatedProgress,
+      }
+    }),
 
   clearTask: () =>
     set({
