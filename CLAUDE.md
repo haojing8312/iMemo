@@ -28,7 +28,7 @@ docs/                 # 文档
 ## Commands
 
 ```bash
-# 开发模式
+# 开发模式服務啓動命令
 pnpm tauri dev
 
 # 构建生产版本

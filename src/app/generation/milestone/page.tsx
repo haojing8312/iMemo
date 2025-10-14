@@ -25,6 +25,10 @@ export default function MilestonePage() {
   const [selectedMilestone, setLocalSelectedMilestone] = useState<Milestone | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  // 一键生成配置
+  const [selectedStyleCount, setSelectedStyleCount] = useState<number>(0)
+  const [imagesPerStyle, setImagesPerStyle] = useState<number>(1)
+
   useEffect(() => {
     // 如果没有上传照片,返回照片选择页面
     if (!uploadedPhotos || uploadedPhotos.length === 0) {
@@ -49,6 +53,9 @@ export default function MilestonePage() {
 
   const handleSelectMilestone = (milestone: Milestone) => {
     setLocalSelectedMilestone(milestone)
+    // 初始化配置：默认使用全部默认风格
+    setSelectedStyleCount(milestone.defaultStyleIds.length)
+    setImagesPerStyle(1)
   }
 
   // 一键生成 (自动模式)
@@ -62,12 +69,16 @@ export default function MilestonePage() {
       setSelectedMilestone(selectedMilestone)
       setGenerationMode('auto')
 
-      // 创建任务
+      // 创建任务，传递用户配置
       const task = await createTask({
         milestoneId: selectedMilestone.id,
         milestoneName: selectedMilestone.name,
         photoIds: uploadedPhotos.map(p => p.filePath),
-        mode: 'auto'
+        mode: 'auto',
+        autoConfig: {
+          selectedStyleCount,
+          imagesPerStyle
+        }
       })
 
       // 保存任务到 store
@@ -183,6 +194,75 @@ export default function MilestonePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Auto-generate configuration */}
+              <div className="space-y-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center space-x-2 text-sm font-medium text-blue-900">
+                  <Sparkles className="h-4 w-4" />
+                  <span>一键生成配置</span>
+                </div>
+
+                {/* 风格数量选择 */}
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-700">
+                    选择风格数量（共 {selectedMilestone.defaultStyleIds.length} 种可用风格）
+                  </label>
+                  <div className="flex items-center space-x-4">
+                    <input
+                      type="range"
+                      min="1"
+                      max={selectedMilestone.defaultStyleIds.length}
+                      value={selectedStyleCount}
+                      onChange={(e) => setSelectedStyleCount(Number(e.target.value))}
+                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <input
+                      type="number"
+                      min="1"
+                      max={selectedMilestone.defaultStyleIds.length}
+                      value={selectedStyleCount}
+                      onChange={(e) => setSelectedStyleCount(Math.min(selectedMilestone.defaultStyleIds.length, Math.max(1, Number(e.target.value))))}
+                      className="w-16 px-2 py-1 text-sm border border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-600">种</span>
+                  </div>
+                </div>
+
+                {/* 每种风格图片数量选择 */}
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-700">
+                    每种风格生成图片数量（最多 8 张）
+                  </label>
+                  <div className="flex items-center space-x-4">
+                    <input
+                      type="range"
+                      min="1"
+                      max="8"
+                      value={imagesPerStyle}
+                      onChange={(e) => setImagesPerStyle(Number(e.target.value))}
+                      className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <input
+                      type="number"
+                      min="1"
+                      max="8"
+                      value={imagesPerStyle}
+                      onChange={(e) => setImagesPerStyle(Math.min(8, Math.max(1, Number(e.target.value))))}
+                      className="w-16 px-2 py-1 text-sm border border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-600">张</span>
+                  </div>
+                </div>
+
+                {/* 总计信息 */}
+                <div className="pt-2 border-t border-blue-200">
+                  <p className="text-sm text-blue-900">
+                    <span className="font-semibold">预计生成：</span>
+                    随机选择 {selectedStyleCount} 种风格，每种生成 {imagesPerStyle} 张，
+                    共 <span className="text-lg font-bold text-blue-600">{selectedStyleCount * imagesPerStyle}</span> 张图片
+                  </p>
+                </div>
+              </div>
+
               {/* Auto-generate button */}
               <Button
                 size="lg"
@@ -193,9 +273,9 @@ export default function MilestonePage() {
                 <div className="flex items-center space-x-2">
                   <Sparkles className="h-5 w-5" />
                   <div className="text-left">
-                    <div className="font-semibold">一键生成 (推荐)</div>
+                    <div className="font-semibold">开始一键生成</div>
                     <div className="text-xs font-normal opacity-90">
-                      自动使用 {selectedMilestone.defaultStyleIds.length} 种精选风格，生成 {selectedMilestone.defaultStyleIds.length * 4} 张图片
+                      立即生成 {selectedStyleCount * imagesPerStyle} 张 AI 艺术照
                     </div>
                   </div>
                 </div>
@@ -214,7 +294,7 @@ export default function MilestonePage() {
                   <div className="text-left">
                     <div className="font-semibold">手动选择风格</div>
                     <div className="text-xs font-normal text-muted-foreground">
-                      从 {selectedMilestone.compatibleStyleIds.length} 种兼容风格中自行选择
+                      从全部 {selectedMilestone.compatibleStyleIds.length} 种风格中自由组合，每种可生成 1-8 张图片
                     </div>
                   </div>
                 </div>

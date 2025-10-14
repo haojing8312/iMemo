@@ -50,11 +50,24 @@ export async function createTask(params: CreateTaskParams): Promise<GenerationTa
 
   // Determine which styles to use
   let selectedStyleIds: string[]
+  let imagesPerStyle = 4 // 默认每种风格生成 4 张图片
 
   if (validated.mode === 'auto') {
     // Auto mode: use default styles for milestone
     const defaultStyles = await getDefaultStylesForMilestone(validated.milestoneId)
-    selectedStyleIds = defaultStyles.map(s => s.id)
+
+    // 如果提供了自动生成配置
+    if (validated.autoConfig) {
+      // 根据配置选择风格数量（随机选择或取前N个）
+      const maxStyles = Math.min(validated.autoConfig.selectedStyleCount, defaultStyles.length)
+      // 随机选择指定数量的风格
+      const shuffled = [...defaultStyles].sort(() => Math.random() - 0.5)
+      selectedStyleIds = shuffled.slice(0, maxStyles).map(s => s.id)
+      imagesPerStyle = validated.autoConfig.imagesPerStyle
+    } else {
+      // 使用全部默认风格
+      selectedStyleIds = defaultStyles.map(s => s.id)
+    }
   } else {
     // Manual mode: use provided style IDs
     if (!validated.styleIds || validated.styleIds.length === 0) {
@@ -79,7 +92,7 @@ export async function createTask(params: CreateTaskParams): Promise<GenerationTa
     progress: {
       totalStyles: selectedStyleIds.length,
       completedStyles: 0,
-      totalImages: selectedStyleIds.length * 4, // 4 images per style
+      totalImages: selectedStyleIds.length * imagesPerStyle, // 根据配置计算总图片数
       completedImages: 0,
       failedStyles: []
     },

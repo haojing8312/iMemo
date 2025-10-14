@@ -436,14 +436,21 @@ export async function saveAIGeneratedPhotos(
         uploadedAt: result.createdAt,
         isCropped: false,
         isInLibrary: true,
-        isAIGenerated: true,
+        isAIGenerated: true,  // ✅ 标记为 AI 生成照片
         // 继承第一张原始照片的人物关联
         personId: sourcePhotos[0]?.personId,
         personName: sourcePhotos[0]?.personName,
-        // 添加 AI 元数据
+        // 添加完整的 AI 元数据
         aiMetadata: {
-          styleId: result.styleId,
-          styleName: styleName,
+          taskId: taskId,                          // 生成任务 ID
+          styleId: result.styleId,                 // 风格 ID
+          styleName: styleName,                    // 风格名称
+          milestoneName: milestoneName,            // 场景/里程碑名称
+          similarityLevel: similarityLevel,        // 相似度级别
+          sourcePhotoIds: sourcePhotos.map(p => p.id), // 使用的原始照片 ID 列表
+          sequenceNumber: result.sequenceNum,      // 该风格的第几张图 (1-4)
+          generatedAt: result.createdAt,           // 生成时间戳
+          isFavorited: false,                      // 初始未收藏
         },
       }
     })

@@ -12,7 +12,7 @@
         {
           "id": "birth",
           "name": "出生",
-          "description": "新生儿照片",
+          "description": "记录新生命诞生的珍贵瞬间，温柔自然的光影效果最适合展现宝宝的纯真与美好",
           "icon": "👶",
           "order": 1,
           "compatibleStyleIds": ["soft-pastel", "natural-light", "documentary", "warm-family"],
@@ -24,7 +24,7 @@
         {
           "id": "full-month",
           "name": "满月",
-          "description": "满月纪念照",
+          "description": "宝宝满月啦！用柔和温馨的风格，记录这个特殊的成长里程碑",
           "icon": "🌙",
           "order": 2,
           "compatibleStyleIds": ["soft-pastel", "natural-light", "cute-props", "warm-family"],
@@ -36,7 +36,7 @@
         {
           "id": "100-day",
           "name": "百日照",
-          "description": "百日纪念照",
+          "description": "百天宝宝更有灵气了！明亮活泼的色彩最能展现宝宝的成长活力",
           "icon": "💯",
           "order": 3,
           "compatibleStyleIds": ["soft-pastel", "bright-colorful", "cute-props", "natural-light"],
@@ -48,7 +48,7 @@
         {
           "id": "first-birthday",
           "name": "周岁",
-          "description": "一周岁生日照",
+          "description": "宝宝一岁啦！用缤纷多彩的风格，定格ta的第一个生日派对",
           "icon": "🎂",
           "order": 4,
           "compatibleStyleIds": ["bright-colorful", "cute-props", "playful-fun", "soft-pastel"],

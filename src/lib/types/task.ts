@@ -16,6 +16,14 @@ export type TaskStatus = z.infer<typeof TaskStatusSchema>
 export const GenerationModeSchema = z.enum(['auto', 'manual'])
 export type GenerationMode = z.infer<typeof GenerationModeSchema>
 
+// Auto Generation Config
+export const AutoGenerationConfigSchema = z.object({
+  selectedStyleCount: z.number().int().min(1).max(10), // 选择的风格数量
+  imagesPerStyle: z.number().int().min(1).max(8) // 每种风格生成的图片数量
+})
+
+export type AutoGenerationConfig = z.infer<typeof AutoGenerationConfigSchema>
+
 // Failed Style
 export const FailedStyleSchema = z.object({
   styleId: z.string(),
@@ -100,7 +108,8 @@ export const CreateTaskParamsSchema = z.object({
   milestoneName: z.string(),
   photoIds: z.array(z.string()).min(1),
   mode: GenerationModeSchema,
-  styleIds: z.array(z.string()).optional()
+  styleIds: z.array(z.string()).optional(),
+  autoConfig: AutoGenerationConfigSchema.optional() // 自动生成配置
 }).refine(
   (data) => {
     // If mode is 'manual', styleIds must be provided and have 1-3 items

@@ -35,6 +35,20 @@ export async function initDatabase(): Promise<Database> {
  * 创建数据库表结构
  */
 async function createTables(db: Database) {
+  // 先尝试为已存在的表添加新列（数据迁移）
+  try {
+    await db.execute('ALTER TABLE library_photos ADD COLUMN is_ai_generated INTEGER NOT NULL DEFAULT 0 CHECK (is_ai_generated IN (0, 1))')
+    console.log('[Database] 已添加 is_ai_generated 列')
+  } catch (error) {
+    // 列已存在或表不存在，忽略错误
+  }
+
+  try {
+    await db.execute('ALTER TABLE library_photos ADD COLUMN ai_metadata TEXT')
+    console.log('[Database] 已添加 ai_metadata 列')
+  } catch (error) {
+    // 列已存在或表不存在，忽略错误
+  }
   // 人物档案表
   await db.execute(`
     CREATE TABLE IF NOT EXISTS persons (
@@ -64,6 +78,8 @@ async function createTables(db: Database) {
       crop_width REAL CHECK (crop_width > 0.0 AND crop_width <= 1.0),
       crop_height REAL CHECK (crop_height > 0.0 AND crop_height <= 1.0),
       is_in_library INTEGER NOT NULL DEFAULT 1,
+      is_ai_generated INTEGER NOT NULL DEFAULT 0 CHECK (is_ai_generated IN (0, 1)),
+      ai_metadata TEXT,
       person_id TEXT,
       person_name TEXT,
       face_count INTEGER DEFAULT 0,
@@ -316,8 +332,9 @@ export async function insertLibraryPhoto(photo: Omit<PhotoUpload, 'id'>): Promis
     `INSERT INTO library_photos (
       id, file_path, original_name, width, height, file_size, format,
       uploaded_at, is_cropped, crop_ratio, crop_x, crop_y, crop_width, crop_height,
-      is_in_library, person_id, person_name, face_count, face_confidence, quality_score
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      is_in_library, is_ai_generated, ai_metadata,
+      person_id, person_name, face_count, face_confidence, quality_score
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       id,
       photo.filePath,
@@ -334,6 +351,8 @@ export async function insertLibraryPhoto(photo: Omit<PhotoUpload, 'id'>): Promis
       photo.cropWidth || null,
       photo.cropHeight || null,
       photo.isInLibrary ? 1 : 0,
+      photo.isAIGenerated ? 1 : 0,
+      photo.aiMetadata ? JSON.stringify(photo.aiMetadata) : null,
       photo.personId || null,
       photo.personName || null,
       photo.faceCount || 0,
@@ -365,6 +384,8 @@ export async function findAllLibraryPhotos(): Promise<PhotoUpload[]> {
     cropWidth: row.crop_width,
     cropHeight: row.crop_height,
     isInLibrary: row.is_in_library === 1,
+    isAIGenerated: row.is_ai_generated === 1,
+    aiMetadata: row.ai_metadata ? JSON.parse(row.ai_metadata) : undefined,
     personId: row.person_id,
     personName: row.person_name,
     faceCount: row.face_count,
@@ -396,6 +417,8 @@ export async function findPhotosByPersonId(personId: string): Promise<PhotoUploa
     cropWidth: row.crop_width,
     cropHeight: row.crop_height,
     isInLibrary: row.is_in_library === 1,
+    isAIGenerated: row.is_ai_generated === 1,
+    aiMetadata: row.ai_metadata ? JSON.parse(row.ai_metadata) : undefined,
     personId: row.person_id,
     personName: row.person_name,
     faceCount: row.face_count,
