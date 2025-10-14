@@ -4,14 +4,15 @@
 import { generateImages } from './api'
 import type { Style } from './types/style'
 import type { GenerationResult } from './types/task'
+import { generatePrompt } from './promptGenerator'
 
 export interface MultiStyleGenerationParams {
   /** Path to the uploaded photo */
   photoPath: string
   /** Array of styles to generate */
   styles: Style[]
-  /** Milestone name for context (e.g., "结婚", "百日照") */
-  milestoneName: string
+  /** Milestone ID for dynamic prompt generation (e.g., "100-day", "wedding", "retirement") */
+  milestoneId: string
   /** Number of images to generate per style (default: 4) */
   imagesPerStyle?: number
   /** Progress callback - called after each image */
@@ -45,7 +46,7 @@ export async function generateMultiStyle(
   const {
     photoPath,
     styles,
-    milestoneName,
+    milestoneId,
     imagesPerStyle = 4,
     onProgress,
     onStyleComplete,
@@ -62,13 +63,21 @@ export async function generateMultiStyle(
   // Sequential processing - one style at a time
   for (const style of styles) {
     try {
-      // Build prompt by replacing template placeholders
-      const prompt = style.promptTemplate
-        .replace('[SUBJECT]', 'the person')
-        .replace('[MILESTONE_NAME]', milestoneName)
+      // Generate prompt using the new dynamic system
+      const promptResult = generatePrompt({
+        styleId: style.id,
+        milestoneId: milestoneId
+      })
+
+      if (!promptResult.success) {
+        throw new Error(promptResult.error || '提示词生成失败')
+      }
+
+      const prompt = promptResult.prompt
 
       console.log(`[MultiStyleGenerator] Starting style: ${style.name} (${style.id})`)
-      console.log(`[MultiStyleGenerator] Prompt: ${prompt}`)
+      console.log(`[MultiStyleGenerator] Milestone: ${promptResult.sceneType} (${milestoneId})`)
+      console.log(`[MultiStyleGenerator] Prompt: ${prompt.substring(0, 100)}...`)
 
       // Generate images one by one to enable per-image progress updates
       // 逐张生成图片,每生成一张就更新进度
