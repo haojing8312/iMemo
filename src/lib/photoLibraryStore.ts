@@ -15,6 +15,7 @@ export const usePhotoLibrary = create<PhotoLibraryState>((set, get) => ({
   currentPersonFilter: undefined,
   currentTypeFilter: 'all',
   currentStyleFilter: undefined,
+  currentModeFilter: undefined, // T021: 生成模式筛选
 
   // ========================================
   // 照片操作
@@ -216,9 +217,9 @@ export const usePhotoLibrary = create<PhotoLibraryState>((set, get) => ({
    */
   setTypeFilter: (type) => {
     set({ currentTypeFilter: type })
-    // 如果不是筛选 AI 照片，清除风格筛选
+    // 如果不是筛选 AI 照片，清除风格筛选和模式筛选 (T021)
     if (type !== 'ai') {
-      set({ currentStyleFilter: undefined })
+      set({ currentStyleFilter: undefined, currentModeFilter: undefined })
     }
   },
 
@@ -227,6 +228,13 @@ export const usePhotoLibrary = create<PhotoLibraryState>((set, get) => ({
    */
   setStyleFilter: (styleId?: string) => {
     set({ currentStyleFilter: styleId })
+  },
+
+  /**
+   * T021: 设置生成模式筛选（仅对 AI 照片有效）
+   */
+  setModeFilter: (mode?: 'single' | 'multi') => {
+    set({ currentModeFilter: mode })
   },
 }))
 
@@ -244,6 +252,7 @@ export function useFilteredPhotos() {
   const currentTypeFilter = usePhotoLibrary(state => state.currentTypeFilter)
   const currentPersonFilter = usePhotoLibrary(state => state.currentPersonFilter)
   const currentStyleFilter = usePhotoLibrary(state => state.currentStyleFilter)
+  const currentModeFilter = usePhotoLibrary(state => state.currentModeFilter) // T021
 
   // 使用 useMemo 缓存筛选结果
   return useMemo(() => {
@@ -266,8 +275,13 @@ export function useFilteredPhotos() {
       photos = photos.filter(p => p.aiMetadata?.styleId === currentStyleFilter)
     }
 
+    // T021: 生成模式筛选（仅对 AI 照片有效）
+    if (currentModeFilter && currentTypeFilter === 'ai') {
+      photos = photos.filter(p => p.aiMetadata?.generationMode === currentModeFilter)
+    }
+
     return photos
-  }, [libraryPhotos, currentTypeFilter, currentPersonFilter, currentStyleFilter])
+  }, [libraryPhotos, currentTypeFilter, currentPersonFilter, currentStyleFilter, currentModeFilter])
 }
 
 /**

@@ -210,6 +210,7 @@ export interface PhotoLibraryState {
   currentPersonFilter?: string       // 当前筛选的人物 ID
   currentTypeFilter: PhotoTypeFilter // 当前照片类型筛选
   currentStyleFilter?: string        // 当前风格筛选（仅对 AI 照片有效）
+  currentModeFilter?: GenerationMode // T021: 当前生成模式筛选（仅对 AI 照片有效）
 
   // 照片操作
   addPhotoToLibrary: (photo: PhotoUpload) => Promise<void>
@@ -234,4 +235,5 @@ export interface PhotoLibraryState {
   setPersonFilter: (personId?: string) => void
   setTypeFilter: (type: PhotoTypeFilter) => void
   setStyleFilter: (styleId?: string) => void
+  setModeFilter: (mode?: GenerationMode) => void // T021: 设置生成模式筛选
 }

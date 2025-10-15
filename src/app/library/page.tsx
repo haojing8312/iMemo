@@ -20,6 +20,7 @@ export default function LibraryPage() {
     currentPersonFilter,
     currentTypeFilter,
     currentStyleFilter,
+    currentModeFilter, // T021
     selectedPhotoIds,
     addPhotosToLibrary,
     deletePhotoFromLibrary,
@@ -29,6 +30,7 @@ export default function LibraryPage() {
     setPersonFilter,
     setTypeFilter,
     setStyleFilter,
+    setModeFilter, // T021
     clearSelection,
     togglePhotoSelection,
   } = usePhotoLibrary()
@@ -252,6 +254,19 @@ export default function LibraryPage() {
                   </select>
                 )}
 
+                {/* T021: 生成模式筛选（仅 AI 照片） */}
+                {currentTypeFilter === 'ai' && (
+                  <select
+                    value={currentModeFilter || 'all'}
+                    onChange={(e) => setModeFilter(e.target.value === 'all' ? undefined : e.target.value as 'single' | 'multi')}
+                    className="w-[160px] h-10 px-3 py-2 text-sm border border-neutral-200 rounded-md bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  >
+                    <option value="all">所有模式</option>
+                    <option value="single">单人模式</option>
+                    <option value="multi">多人模式</option>
+                  </select>
+                )}
+
                 {/* 当前筛选标签 */}
                 <div className="flex items-center gap-2">
                   {currentPersonFilter && (
@@ -272,6 +287,20 @@ export default function LibraryPage() {
                         {availableStyles.find(s => s.id === currentStyleFilter)?.name}
                       </span>
                       <button onClick={() => setStyleFilter(undefined)}>
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* T021: 生成模式筛选标签 */}
+                  {currentModeFilter && (
+                    <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                      currentModeFilter === 'multi'
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'bg-gray-50 text-gray-700'
+                    }`}>
+                      <span>{currentModeFilter === 'multi' ? '多人模式' : '单人模式'}</span>
+                      <button onClick={() => setModeFilter(undefined)}>
                         <X className="h-4 w-4" />
                       </button>
                     </div>
