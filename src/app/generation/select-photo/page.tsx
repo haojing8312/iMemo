@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { open } from '@tauri-apps/plugin-dialog'
-import { Upload, ChevronRight, Info, ArrowLeft } from 'lucide-react'
+import { Upload, ChevronRight, Info, ArrowLeft, User, Users } from 'lucide-react' // T022: 添加模式图标
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -279,9 +279,31 @@ export default function SelectPhotoPage() {
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-display-md font-bold text-neutral-800 mb-2">
-                选择照片
-              </h1>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-display-md font-bold text-neutral-800">
+                  选择照片
+                </h1>
+                {/* T022: 生成模式标识 */}
+                <Badge
+                  className={`text-body px-3 py-1.5 flex items-center gap-2 ${
+                    generationMode === 'multi'
+                      ? 'bg-blue-100 text-blue-700 border-blue-300'
+                      : 'bg-gray-100 text-gray-700 border-gray-300'
+                  }`}
+                >
+                  {generationMode === 'multi' ? (
+                    <>
+                      <Users className="h-4 w-4" />
+                      <span>多人模式</span>
+                    </>
+                  ) : (
+                    <>
+                      <User className="h-4 w-4" />
+                      <span>单人模式</span>
+                    </>
+                  )}
+                </Badge>
+              </div>
               <p className="text-body-lg text-neutral-600">
                 生成 AI 艺术照 · 步骤 1/3
               </p>
