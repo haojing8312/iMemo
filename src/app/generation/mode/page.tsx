@@ -20,13 +20,34 @@ const ICON_MAP = {
 
 export default function ModeSelectionPage() {
   const router = useRouter()
-  const { generationMode, setGenerationMode, selectedMilestone } = useAppStore()
+  const { generationMode, setGenerationMode, selectedMilestone, uploadedPhotos, setUploadedPhotos } = useAppStore()
 
   const modes = getAllModes()
 
+  // T028: 模式切换确认处理
   const handleSelectMode = (mode: GenerationMode) => {
+    // 如果选择的是当前模式,直接跳转
+    if (mode === generationMode) {
+      router.push('/generation/select-photo')
+      return
+    }
+
+    // 如果已有上传照片,显示确认对话框
+    if (uploadedPhotos.length > 0) {
+      const confirmed = window.confirm(
+        `切换到${getModeConfig(mode).name}将清空已上传的照片,确认继续吗？`
+      )
+
+      if (!confirmed) {
+        return // 用户取消切换
+      }
+
+      // 用户确认,清空照片
+      setUploadedPhotos([])
+    }
+
+    // 切换模式并跳转
     setGenerationMode(mode)
-    // 跳转到照片上传页
     router.push('/generation/select-photo')
   }
 
