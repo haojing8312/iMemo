@@ -6,11 +6,13 @@
 
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/lib/store'
 import { getAllModes, getModeConfig } from '@/lib/generationModeConfig'
 import type { GenerationMode } from '@/lib/types'
 import { User, Users, ArrowLeft } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 // Icon 映射
 const ICON_MAP = {
@@ -23,6 +25,8 @@ export default function ModeSelectionPage() {
   const { generationMode, setGenerationMode, selectedMilestone, uploadedPhotos, setUploadedPhotos } = useAppStore()
 
   const modes = getAllModes()
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const [pendingMode, setPendingMode] = useState<GenerationMode | null>(null)
 
   // T028: 模式切换确认处理
   const handleSelectMode = (mode: GenerationMode) => {
@@ -34,21 +38,29 @@ export default function ModeSelectionPage() {
 
     // 如果已有上传照片,显示确认对话框
     if (uploadedPhotos.length > 0) {
-      const confirmed = window.confirm(
-        `切换到${getModeConfig(mode).name}将清空已上传的照片,确认继续吗？`
-      )
-
-      if (!confirmed) {
-        return // 用户取消切换
-      }
-
-      // 用户确认,清空照片
-      setUploadedPhotos([])
+      setPendingMode(mode)
+      setConfirmDialogOpen(true)
+      return
     }
 
-    // 切换模式并跳转
+    // 直接切换模式并跳转
     setGenerationMode(mode)
     router.push('/generation/select-photo')
+  }
+
+  // T031: 确认切换模式
+  const handleConfirmModeSwitch = () => {
+    if (!pendingMode) return
+
+    // 清空照片并切换模式
+    setUploadedPhotos([])
+    setGenerationMode(pendingMode)
+    router.push('/generation/select-photo')
+  }
+
+  // 取消切换
+  const handleCancelModeSwitch = () => {
+    setPendingMode(null)
   }
 
   const handleBack = () => {
@@ -56,7 +68,22 @@ export default function ModeSelectionPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-pink-50 to-white">
+    <>
+      {/* T031: 自定义确认对话框 */}
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        onOpenChange={setConfirmDialogOpen}
+        title="切换生成模式"
+        message={pendingMode ? `切换到${getModeConfig(pendingMode).name}将清空已上传的 ${uploadedPhotos.length} 张照片` : ''}
+        details="这个操作无法撤销,请确认是否继续?"
+        confirmText="确认切换"
+        cancelText="取消"
+        variant="destructive"
+        onConfirm={handleConfirmModeSwitch}
+        onCancel={handleCancelModeSwitch}
+      />
+
+      <div className="flex flex-col h-screen bg-gradient-to-b from-pink-50 to-white">
       {/* 顶部导航 */}
       <div className="flex items-center justify-between p-4 bg-white shadow-sm">
         <button
@@ -175,5 +202,6 @@ export default function ModeSelectionPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

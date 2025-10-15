@@ -303,13 +303,23 @@ export default function StyleSelectionPage() {
 
         {/* Bottom actions */}
         <div className="flex justify-between items-center">
-          <Button
-            variant="outline"
-            onClick={() => router.push('/generation/milestone')}
-          >
-            <ChevronLeft className="h-4 w-4 mr-2" />
-            返回里程碑选择
-          </Button>
+          {/* T029: 添加返回按钮组 */}
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              onClick={() => router.push('/generation/select-photo')}
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              重新选择照片
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => router.push('/generation/milestone')}
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              返回里程碑
+            </Button>
+          </div>
 
           <div className="flex items-center space-x-4">
             {selectedCount > 10 && (
