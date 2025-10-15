@@ -6,6 +6,22 @@ export type SimilarityLevel = 'high' | 'medium' | 'low'
 export type CropRatio = '1:1' | '3:4' | '4:3'
 export type PhotoFormat = 'JPG' | 'PNG'
 
+// ============================================================================
+// 003-2: 多人照片生成模式类型定义
+// ============================================================================
+
+/** 生成模式 */
+export type GenerationMode = 'single' | 'multi'
+
+/** 人脸检测结果 (specs/003-2/contracts/photo-validation-api.md) */
+export interface FaceValidationResult {
+  isValid: boolean
+  faceCount: number
+  confidence?: number
+  timestamp: number
+  error?: string
+}
+
 export interface PhotoUpload {
   id: string
   filePath: string
@@ -33,6 +49,11 @@ export interface PhotoUpload {
   // AI 生成相关字段
   isAIGenerated?: boolean  // 是否为 AI 生成照片
   aiMetadata?: AIPhotoMetadata  // AI 生成元数据（仅当 isAIGenerated=true 时有值）
+
+  // 003-2: 人脸检测字段
+  faceCount?: number       // 检测到的人脸数量
+  faceConfidence?: number  // 人脸检测置信度
+  qualityScore?: number    // 照片质量评分
 }
 
 // AI 照片元数据
@@ -46,6 +67,7 @@ export interface AIPhotoMetadata {
   sequenceNumber: number          // 该风格的第几张图 (1-4)
   generatedAt: number             // 生成时间戳
   isFavorited?: boolean           // 是否收藏（从 GeneratedImage 同步）
+  generationMode?: GenerationMode // 003-2: 生成模式
 }
 
 export interface StyleTemplate {
@@ -55,6 +77,11 @@ export interface StyleTemplate {
   thumbnailPath?: string
   displayOrder: number // 1-6
   description?: string
+  // 003-2: 多人模式支持
+  supportedModes?: GenerationMode[] // 支持的模式列表
+  minPhotos?: number                // 最少照片数
+  maxPhotos?: number                // 最多照片数
+  isMultiPerson?: boolean           // 是否支持多人（冗余字段，便于筛选）
 }
 
 export interface GenerationTask {
@@ -68,6 +95,7 @@ export interface GenerationTask {
   errorMessage?: string
   totalImages: number
   completedImages: number
+  mode?: GenerationMode      // 003-2: 生成模式
 }
 
 export interface GeneratedImage {
@@ -134,12 +162,29 @@ export interface Person {
   photoCount?: number       // 关联的照片数量（冗余字段）
 }
 
+/** 相册筛选条件 (specs/003-2/contracts/photo-library-api.md) */
+export interface AlbumFilter {
+  photoType?: 'original' | 'ai'  // 照片类型筛选
+  styleId?: string                // 风格筛选（仅对 AI 照片）
+  milestoneName?: string          // 里程碑筛选
+  dateRange?: {                   // 日期范围
+    start: number
+    end: number
+  }
+  generationMode?: GenerationMode // 生成模式筛选
+  limit?: number                  // 分页：返回条数
+  offset?: number                 // 分页：偏移量
+}
+
 // Store state types (Zustand)
 export interface AppStore {
   currentTaskId?: string
   uploadedPhotos: PhotoUpload[]
   selectedStyleIds: string[]
   similarityLevel: SimilarityLevel
+  // 003-2: 模式管理
+  generationMode: GenerationMode          // 当前生成模式
+  photoValidationResults: Map<string, FaceValidationResult> // 照片验证结果缓存
 
   setUploadedPhotos: (photos: PhotoUpload[]) => void
   addPhoto: (photo: PhotoUpload) => void
@@ -147,6 +192,10 @@ export interface AppStore {
   setSelectedStyleIds: (styleIds: string[]) => void
   setSimilarityLevel: (level: SimilarityLevel) => void
   setCurrentTaskId: (taskId: string | undefined) => void
+  // 003-2: 新增操作
+  setGenerationMode: (mode: GenerationMode) => void
+  setPhotoValidationResult: (photoId: string, result: FaceValidationResult) => void
+  clearValidationResults: () => void
   reset: () => void
 }
 

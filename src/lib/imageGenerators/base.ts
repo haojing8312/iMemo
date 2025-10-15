@@ -9,8 +9,10 @@ import type {
   SimilarityLevel,
 } from '../types'
 
+// T017: Extended to support multi-person mode (003-2)
 export interface ImageGenerationParams {
-  photoPath: string
+  photoPath: string  // 单人模式: 单张照片路径
+  photoPaths?: string[]  // T017: 多人模式: 多张照片路径数组 (可选)
   prompt: string
   similarity?: SimilarityLevel
   numImages?: number

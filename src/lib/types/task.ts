@@ -12,9 +12,13 @@ export const TaskStatusSchema = z.enum([
 
 export type TaskStatus = z.infer<typeof TaskStatusSchema>
 
-// Generation Mode
-export const GenerationModeSchema = z.enum(['auto', 'manual'])
-export type GenerationMode = z.infer<typeof GenerationModeSchema>
+// T016: Task Creation Mode (auto generation vs manual style selection)
+export const TaskCreationModeSchema = z.enum(['auto', 'manual'])
+export type TaskCreationMode = z.infer<typeof TaskCreationModeSchema>
+
+// T016: Photo Generation Mode (single person vs multi person) - 003-2
+export const PhotoGenerationModeSchema = z.enum(['single', 'multi'])
+export type PhotoGenerationMode = z.infer<typeof PhotoGenerationModeSchema>
 
 // Auto Generation Config
 export const AutoGenerationConfigSchema = z.object({
@@ -83,12 +87,13 @@ export const GenerationResultSchema = z.object({
 
 export type GenerationResult = z.infer<typeof GenerationResultSchema>
 
-// Generation Task
+// T016: Generation Task (updated for 003-2 multi-person support)
 export const GenerationTaskSchema = z.object({
   id: z.string(), // UUID v4
   milestoneId: z.string(),
   milestoneName: z.string(),
-  generationMode: GenerationModeSchema,
+  generationMode: TaskCreationModeSchema, // auto | manual
+  photoMode: PhotoGenerationModeSchema.optional().default('single'), // T016: single | multi
   selectedStyleIds: z.array(z.string()),
   uploadedPhotoIds: z.array(z.string()),
   status: TaskStatusSchema,
@@ -102,12 +107,13 @@ export const GenerationTaskSchema = z.object({
 
 export type GenerationTask = z.infer<typeof GenerationTaskSchema>
 
-// Create Task Parameters
+// T016: Create Task Parameters (updated for 003-2)
 export const CreateTaskParamsSchema = z.object({
   milestoneId: z.string(),
   milestoneName: z.string(),
   photoIds: z.array(z.string()).min(1),
-  mode: GenerationModeSchema,
+  mode: TaskCreationModeSchema, // auto | manual
+  photoMode: PhotoGenerationModeSchema.optional().default('single'), // T016: single | multi
   styleIds: z.array(z.string()).optional(),
   autoConfig: AutoGenerationConfigSchema.optional() // 自动生成配置
 }).refine(

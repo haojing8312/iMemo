@@ -16,6 +16,7 @@ export default function MilestonePage() {
   const router = useRouter()
   const {
     uploadedPhotos,
+    generationMode, // T016: 获取当前生成模式 (single | multi)
     setSelectedMilestone,
     setGenerationMode,
     setCurrentTask
@@ -69,12 +70,13 @@ export default function MilestonePage() {
       setSelectedMilestone(selectedMilestone)
       setGenerationMode('auto')
 
-      // 创建任务，传递用户配置
+      // T016: 创建任务，传递用户配置和 photoMode
       const task = await createTask({
         milestoneId: selectedMilestone.id,
         milestoneName: selectedMilestone.name,
         photoIds: uploadedPhotos.map(p => p.filePath),
         mode: 'auto',
+        photoMode: generationMode, // T016: 传入当前生成模式 (single | multi)
         autoConfig: {
           selectedStyleCount,
           imagesPerStyle

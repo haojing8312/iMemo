@@ -2,17 +2,15 @@
 // Manages upload photos, selected styles, current task, milestones, and progress
 
 import { create } from 'zustand'
-import type { AppStore, PhotoUpload, SimilarityLevel } from './types'
+import type { AppStore, PhotoUpload, SimilarityLevel, GenerationMode, FaceValidationResult } from './types'
 import type { Milestone } from './types/milestone'
-import type { GenerationTask, TaskProgress, GenerationMode } from './types/task'
+import type { GenerationTask, TaskProgress } from './types/task'
 
 interface ExtendedAppStore extends AppStore {
   // Milestone state (T014)
   selectedMilestone: Milestone | null
   setSelectedMilestone: (milestone: Milestone | null) => void
   clearMilestone: () => void
-  generationMode: GenerationMode
-  setGenerationMode: (mode: GenerationMode) => void
 
   // Task progress state (T015)
   currentTask: GenerationTask | null
@@ -29,9 +27,12 @@ export const useAppStore = create<ExtendedAppStore>((set) => ({
   selectedStyleIds: [],
   similarityLevel: 'medium',
 
+  // 003-2: 模式管理状态
+  generationMode: 'single' as GenerationMode,
+  photoValidationResults: new Map<string, FaceValidationResult>(),
+
   // Milestone state (T014 - NEW)
   selectedMilestone: null,
-  generationMode: 'auto',
 
   // Task progress state (T015 - NEW)
   currentTask: null,
@@ -61,7 +62,18 @@ export const useAppStore = create<ExtendedAppStore>((set) => ({
 
   clearMilestone: () => set({ selectedMilestone: null }),
 
+  // 003-2: 模式管理 actions
   setGenerationMode: (mode) => set({ generationMode: mode }),
+
+  setPhotoValidationResult: (photoId, result) =>
+    set((state) => {
+      const newResults = new Map(state.photoValidationResults)
+      newResults.set(photoId, result)
+      return { photoValidationResults: newResults }
+    }),
+
+  clearValidationResults: () =>
+    set({ photoValidationResults: new Map<string, FaceValidationResult>() }),
 
   // Task progress actions (T015 - NEW)
   setCurrentTask: (task) =>
@@ -108,7 +120,8 @@ export const useAppStore = create<ExtendedAppStore>((set) => ({
       selectedStyleIds: [],
       similarityLevel: 'medium',
       selectedMilestone: null,
-      generationMode: 'auto',
+      generationMode: 'single',
+      photoValidationResults: new Map<string, FaceValidationResult>(),
       currentTask: null,
       taskProgress: null,
     }),

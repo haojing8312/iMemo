@@ -8,17 +8,18 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAppStore } from '@/lib/store'
-import { getCompatibleStyles, getAllStyleCollections } from '@/lib/styleService'
+import { getCompatibleStylesByMode, getAllStyleCollections } from '@/lib/styleService'
 import { type StyleCollectionType } from '@/lib/configLoader'
 import { createTask } from '@/lib/taskService'
 import type { Style } from '@/lib/types/style'
-import { Check, ChevronLeft, Sparkles } from 'lucide-react'
+import { Check, ChevronLeft, Sparkles, User, Users } from 'lucide-react'
 
 export default function StyleSelectionPage() {
   const router = useRouter()
   const {
     uploadedPhotos,
     selectedMilestone,
+    generationMode,
     setCurrentTask,
     setGenerationMode
   } = useAppStore()
@@ -53,7 +54,12 @@ export default function StyleSelectionPage() {
 
     try {
       setIsLoading(true)
-      const styles = await getCompatibleStyles(selectedMilestone.id, selectedCollection)
+      // T011: 根据当前生成模式筛选兼容风格
+      const styles = await getCompatibleStylesByMode(
+        selectedMilestone.id,
+        generationMode,
+        selectedCollection
+      )
       setCompatibleStyles(styles)
 
       // Pre-select default styles
@@ -90,12 +96,13 @@ export default function StyleSelectionPage() {
       setIsLoading(true)
       setGenerationMode('manual')
 
-      // Create task with manually selected styles
+      // T016: Create task with manually selected styles and photoMode
       const task = await createTask({
         milestoneId: selectedMilestone.id,
         milestoneName: selectedMilestone.name,
         photoIds: uploadedPhotos.map(p => p.filePath),
         mode: 'manual',
+        photoMode: generationMode, // T016: 传入当前生成模式 (single | multi)
         styleIds: Array.from(selectedStyleIds)
       })
 
@@ -132,6 +139,15 @@ export default function StyleSelectionPage() {
               <span className="text-2xl mr-1">{selectedMilestone.icon}</span>
               {selectedMilestone.name}
             </span>
+            <span>•</span>
+            {/* T011: 显示当前生成模式 */}
+            <Badge variant="outline" className="flex items-center gap-1">
+              {generationMode === 'single' ? (
+                <><User className="h-3 w-3" /> 单人模式</>
+              ) : (
+                <><Users className="h-3 w-3" /> 多人模式</>
+              )}
+            </Badge>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">选择生成风格</h1>
           <p className="text-gray-600">

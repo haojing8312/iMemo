@@ -131,3 +131,50 @@ export async function validateStyleCompatibility(
     }
   }
 }
+
+/**
+ * 003-2: T010 - 根据生成模式筛选风格
+ * 获取支持指定生成模式的风格列表
+ * @param mode 生成模式 ('single' | 'multi')
+ * @param collection 风格集合类型,默认为 'all'
+ * @returns 支持该模式的风格列表
+ */
+export async function getStylesByMode(
+  mode: 'single' | 'multi',
+  collection: StyleCollectionType = 'all'
+): Promise<Style[]> {
+  const allStyles = await getAllStyles(collection)
+
+  return allStyles.filter(style => {
+    // 如果风格没有定义 supportedModes,默认支持单人模式
+    if (!style.supportedModes || style.supportedModes.length === 0) {
+      return mode === 'single'
+    }
+
+    return style.supportedModes.includes(mode)
+  })
+}
+
+/**
+ * 003-2: T010 - 获取里程碑的兼容风格并按模式筛选
+ * @param milestoneId 里程碑ID
+ * @param mode 生成模式
+ * @param collection 风格集合类型,默认为 'all'
+ * @returns 既兼容该里程碑又支持该模式的风格列表
+ */
+export async function getCompatibleStylesByMode(
+  milestoneId: string,
+  mode: 'single' | 'multi',
+  collection: StyleCollectionType = 'all'
+): Promise<Style[]> {
+  const compatibleStyles = await getCompatibleStyles(milestoneId, collection)
+
+  return compatibleStyles.filter(style => {
+    // 如果风格没有定义 supportedModes,默认支持单人模式
+    if (!style.supportedModes || style.supportedModes.length === 0) {
+      return mode === 'single'
+    }
+
+    return style.supportedModes.includes(mode)
+  })
+}

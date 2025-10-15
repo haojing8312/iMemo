@@ -35,7 +35,7 @@ export async function initDatabase(): Promise<Database> {
  * 创建数据库表结构
  */
 async function createTables(db: Database) {
-  // 先尝试为已存在的表添加新列（数据迁移）
+  // 先尝试为已存在的表添加新列（数据迁移 - T004: 003-2 多人照片生成）
   try {
     await db.execute('ALTER TABLE library_photos ADD COLUMN is_ai_generated INTEGER NOT NULL DEFAULT 0 CHECK (is_ai_generated IN (0, 1))')
     console.log('[Database] 已添加 is_ai_generated 列')
@@ -49,6 +49,44 @@ async function createTables(db: Database) {
   } catch (error) {
     // 列已存在或表不存在，忽略错误
   }
+
+  // 为 generation_tasks 表添加 mode 字段（003-2）
+  try {
+    await db.execute("ALTER TABLE generation_tasks ADD COLUMN mode TEXT NOT NULL DEFAULT 'single' CHECK (mode IN ('single', 'multi'))")
+    console.log('[Database Migration 003-2] 已添加 generation_tasks.mode 列')
+  } catch (error) {
+    // 列已存在，忽略错误
+  }
+
+  // 为 style_templates 表添加多人模式支持字段（003-2）
+  try {
+    await db.execute('ALTER TABLE style_templates ADD COLUMN supported_modes TEXT')
+    console.log('[Database Migration 003-2] 已添加 style_templates.supported_modes 列')
+  } catch (error) {
+    // 列已存在，忽略错误
+  }
+
+  try {
+    await db.execute('ALTER TABLE style_templates ADD COLUMN min_photos INTEGER DEFAULT 1')
+    console.log('[Database Migration 003-2] 已添加 style_templates.min_photos 列')
+  } catch (error) {
+    // 列已存在，忽略错误
+  }
+
+  try {
+    await db.execute('ALTER TABLE style_templates ADD COLUMN max_photos INTEGER DEFAULT 1')
+    console.log('[Database Migration 003-2] 已添加 style_templates.max_photos 列')
+  } catch (error) {
+    // 列已存在，忽略错误
+  }
+
+  try {
+    await db.execute('ALTER TABLE style_templates ADD COLUMN is_multi_person INTEGER DEFAULT 0')
+    console.log('[Database Migration 003-2] 已添加 style_templates.is_multi_person 列')
+  } catch (error) {
+    // 列已存在，忽略错误
+  }
+
   // 人物档案表
   await db.execute(`
     CREATE TABLE IF NOT EXISTS persons (
@@ -161,6 +199,15 @@ async function createTables(db: Database) {
     CREATE INDEX IF NOT EXISTS idx_generated_images_created_at ON generated_images(created_at DESC);
     CREATE UNIQUE INDEX IF NOT EXISTS idx_task_style_seq ON generated_images(task_id, style_id, sequence_num);
   `)
+
+  // 创建 003-2 新索引
+  await db.execute(`
+    CREATE INDEX IF NOT EXISTS idx_library_photos_ai_type_time ON library_photos(is_ai_generated, uploaded_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_library_photos_face_count ON library_photos(face_count);
+    CREATE INDEX IF NOT EXISTS idx_generation_tasks_mode ON generation_tasks(mode);
+  `)
+
+  console.log('[Database Migration 003-2] 索引创建完成')
 
   console.log('[Database] 表结构创建完成')
 }

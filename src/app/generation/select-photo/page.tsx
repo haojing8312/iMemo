@@ -22,6 +22,9 @@ import { getImageMetadata, getFileSize, checkImageQuality, detectFaces } from '@
 import { PhotoValidator } from '@/lib/validators'
 import { copyPhotoToDataDir } from '@/lib/fileUtils'
 import type { PhotoUpload } from '@/lib/types'
+// T014: 003-2 人脸检测集成
+import { validateSinglePersonPhoto, validateMultiPersonPhoto } from '@/lib/faceDetectionService'
+import { getModeConfig } from '@/lib/generationModeConfig'
 
 interface PhotoWithValidation extends PhotoUpload {
   validationStatus: 'pending' | 'validating' | 'valid' | 'invalid'
@@ -30,7 +33,8 @@ interface PhotoWithValidation extends PhotoUpload {
 
 export default function SelectPhotoPage() {
   const router = useRouter()
-  const { setUploadedPhotos } = useAppStore()
+  // T014: 获取 generationMode 以决定使用哪种验证规则
+  const { setUploadedPhotos, generationMode, setPhotoValidationResult } = useAppStore()
 
   // 照片库状态
   const {
@@ -58,6 +62,10 @@ export default function SelectPhotoPage() {
     loadPersons()
   }, [])
 
+  // T014: 获取当前模式的照片数量限制
+  const modeConfig = getModeConfig(generationMode)
+  const maxPhotos = modeConfig.maxPhotos
+
   // 临时上传照片
   const handleTempUpload = async () => {
     try {
@@ -74,7 +82,7 @@ export default function SelectPhotoPage() {
       }
 
       const filePaths = Array.isArray(selected) ? selected : [selected]
-      const remaining = 5 - tempPhotos.length
+      const remaining = maxPhotos - tempPhotos.length
       const pathsToAdd = filePaths.slice(0, remaining)
 
       for (const path of pathsToAdd) {
@@ -159,8 +167,11 @@ export default function SelectPhotoPage() {
         return
       }
 
-      // 人脸检测（使用复制后的路径）
-      const faceDetection = await detectFaces(copiedPath)
+      // T014: 人脸检测（使用复制后的路径，根据生成模式选择验证函数）
+      const faceDetection = generationMode === 'single'
+        ? await validateSinglePersonPhoto(copiedPath)
+        : await validateMultiPersonPhoto(copiedPath)
+
       if (!faceDetection.isValid) {
         setTempPhotos(prev => prev.map(p =>
           p.id === tempId
@@ -170,10 +181,19 @@ export default function SelectPhotoPage() {
         return
       }
 
-      // 更新为有效状态
+      // T014: 保存验证结果到 store
+      setPhotoValidationResult(copiedPath, faceDetection)
+
+      // 更新为有效状态，包含人脸检测信息
       setTempPhotos(prev => prev.map(p =>
         p.id === tempId
-          ? { ...photo, id: tempId, validationStatus: 'valid' as const } as PhotoWithValidation
+          ? {
+              ...photo,
+              id: tempId,
+              validationStatus: 'valid' as const,
+              faceCount: faceDetection.faceCount,
+              faceConfidence: faceDetection.confidence
+            } as PhotoWithValidation
           : p
       ))
     } catch (error) {
@@ -196,13 +216,13 @@ export default function SelectPhotoPage() {
     })
   }
 
-  // 切换临时照片选择
+  // T014: 切换临时照片选择（使用动态最大数量）
   const toggleTempSelection = (photoId: string) => {
     setTempSelectedIds(prev => {
       const newSet = new Set(prev)
       if (newSet.has(photoId)) {
         newSet.delete(photoId)
-      } else if (newSet.size < 5) {
+      } else if (newSet.size < maxPhotos) {
         newSet.add(photoId)
       }
       return newSet
@@ -232,12 +252,16 @@ export default function SelectPhotoPage() {
     router.push('/generation/milestone')
   }
 
-  // 计算选中数量
+  // T014: 计算选中数量并根据模式配置验证
   const selectedCount = activeTab === 'library'
     ? selectedPhotoIds.size
     : tempSelectedIds.size
 
-  const canProceed = selectedCount >= 1 && selectedCount <= 5
+  const photoCountValidation = modeConfig.validatePhotoCount
+    ? modeConfig.validatePhotoCount(selectedCount)
+    : { isValid: selectedCount >= modeConfig.minPhotos && selectedCount <= modeConfig.maxPhotos }
+
+  const canProceed = photoCountValidation.isValid
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-primary-50/30 to-secondary-50/30 p-8">
@@ -263,18 +287,21 @@ export default function SelectPhotoPage() {
               </p>
             </div>
             <Badge variant="outline" className="text-heading-xs px-4 py-2">
-              已选择 {selectedCount}/5 张
+              已选择 {selectedCount}/{maxPhotos} 张
             </Badge>
           </div>
         </div>
 
-        {/* 提示卡片 */}
+        {/* T014: 根据生成模式显示不同的提示信息 */}
         <Card className="mb-6 border-primary-200 bg-primary-50/50">
           <CardContent className="p-4 flex items-start gap-3">
             <Info className="h-5 w-5 text-primary-600 mt-0.5 flex-shrink-0" />
             <div className="text-body text-neutral-700">
-              <p className="font-medium mb-1">照片选择建议</p>
-              <p>选择光线充足、面部清晰的照片可获得最佳效果。支持选择 1-5 张照片进行生成。</p>
+              <p className="font-medium mb-1">照片选择建议 - {getModeConfig(generationMode).name}</p>
+              <p>{getModeConfig(generationMode).uploadHint}</p>
+              <p className="mt-1 text-body-sm text-neutral-600">
+                选择光线充足、面部清晰的照片可获得最佳效果。
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -336,7 +363,7 @@ export default function SelectPhotoPage() {
               selectedPhotoIds={selectedPhotoIds}
               showCheckbox={true}
               showActions={false}
-              maxSelection={5}
+              maxSelection={maxPhotos}
               onPhotoSelect={togglePhotoSelection}
               emptyMessage="照片库为空，请先添加照片或切换到临时上传"
             />
@@ -353,7 +380,7 @@ export default function SelectPhotoPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {tempPhotos.length < 5 ? (
+                {tempPhotos.length < maxPhotos ? (
                   <button
                     onClick={handleTempUpload}
                     className="w-full py-12 border-2 border-dashed border-neutral-300 rounded-lg hover:border-primary-400 hover:bg-primary-50/50 transition-colors"
@@ -364,13 +391,13 @@ export default function SelectPhotoPage() {
                         点击选择照片
                       </p>
                       <p className="text-body-sm text-neutral-500">
-                        已上传 {tempPhotos.length}/5 张 • 支持 JPG, PNG
+                        已上传 {tempPhotos.length}/{maxPhotos} 张 • 支持 JPG, PNG
                       </p>
                     </div>
                   </button>
                 ) : (
                   <div className="text-center py-8 text-neutral-600">
-                    已达到上传上限（5张）
+                    已达到上传上限（{maxPhotos}张）
                   </div>
                 )}
               </CardContent>
@@ -383,7 +410,7 @@ export default function SelectPhotoPage() {
                 selectedPhotoIds={tempSelectedIds}
                 showCheckbox={true}
                 showActions={true}
-                maxSelection={5}
+                maxSelection={maxPhotos}
                 onPhotoSelect={toggleTempSelection}
                 onPhotoDelete={handleRemoveTempPhoto}
               />

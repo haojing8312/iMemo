@@ -1,21 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm tauri:*)",
-      "Bash(git remote add:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(npm run build:*)",
-      "WebSearch",
-      "WebFetch(domain:v2.tauri.app)",
-      "WebFetch(domain:github.com)",
-      "Bash(taskkill:*)",
-      "Bash(netstat:*)",
-      "Bash(findstr:*)",
-      "Bash(timeout:*)",
-      "WebFetch(domain:zustand.docs.pmnd.rs)",
-      "Bash(cat:*)"
+      "Bash(node:*)",
+      "Bash(pnpm --version)",
+      "Bash(rustc --version)",
+      "Bash(dir:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

@@ -174,19 +174,32 @@ export class SeeDreamGenerator implements ImageGenerator {
   }
 
   /**
-   * 生成多张图片 (支持部分成功)
+   * T017: 生成多张图片 (支持部分成功, 支持多人模式)
    */
   async generateImages(params: ImageGenerationParams): Promise<NanoBananaGenerateResponse> {
     const {
       photoPath,
+      photoPaths, // T017: 多人模式照片数组
       prompt,
       numImages = 4,
       onProgress,
     } = params
 
+    // T017: 决定使用哪张照片
+    // 多人模式: 使用 photoPaths 数组的第一张照片作为主参考
+    // 单人模式: 使用 photoPath
+    const primaryPhotoPath = photoPaths && photoPaths.length > 0
+      ? photoPaths[0]
+      : photoPath
+
+    console.log('[SeeDream] Using primary photo:', primaryPhotoPath)
+    if (photoPaths && photoPaths.length > 1) {
+      console.log(`[SeeDream] Multi-person mode: Using first of ${photoPaths.length} photos as reference`)
+    }
+
     // Step 1: 转换图片为 base64 (0-10%)
     if (onProgress) onProgress(0.05)
-    const imageBase64 = await imageToBase64(photoPath)
+    const imageBase64 = await imageToBase64(primaryPhotoPath)
     if (onProgress) onProgress(0.1)
 
     // Step 2: 逐个生成图片 (10-100%)

@@ -1,6 +1,6 @@
 # HomeMemo Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2025-10-08
+Auto-generated from all feature plans. Last updated: 2025-10-15
 
 ## Language Preference
 
@@ -8,9 +8,13 @@ Auto-generated from all feature plans. Last updated: 2025-10-08
 
 ## Active Technologies
 
-- Electron / Tauri (desktop application framework)
-- AI Image Generation (local model integration)
-- JavaScript/TypeScript (application development)
+- Electron / Tauri 2.8.0 (desktop application framework)
+- Next.js 14.2.33 + React 18.3.1 (frontend framework)
+- TypeScript 5.9.3 (application development)
+- Zustand 5.0.8 (state management)
+- SQLite via @tauri-apps/plugin-sql (local database)
+- Seedream 4.0 API (AI image generation - BytePlus/火山引擎)
+- face-api.js 0.22.2 (人脸检测 - 003-2)
 
 ## Project Structure
 
@@ -52,6 +56,7 @@ npm run lint
 
 ## Recent Changes
 
+- 003-2-multi-person-mode: 添加多人照片生成模式选择功能(单人/多人模式、人脸检测、照片库分离)
 - bainian-photo-generation: Added AI-powered baby photo generation feature with local-first privacy
 
 ## Privacy & Security Principles

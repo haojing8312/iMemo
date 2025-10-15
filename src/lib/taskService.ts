@@ -79,13 +79,14 @@ export async function createTask(params: CreateTaskParams): Promise<GenerationTa
     await validateStyleCompatibility(validated.milestoneId, selectedStyleIds)
   }
 
-  // Create new task
+  // T016: Create new task with photoMode support
   const now = Date.now()
   const task: GenerationTask = {
     id: crypto.randomUUID(),
     milestoneId: validated.milestoneId,
     milestoneName: validated.milestoneName,
-    generationMode: validated.mode,
+    generationMode: validated.mode, // auto | manual
+    photoMode: validated.photoMode || 'single', // T016: single | multi
     selectedStyleIds,
     uploadedPhotoIds: validated.photoIds,
     status: 'pending',

@@ -58,9 +58,9 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-in-up">
               {isLoaded && (
                 hasPhotos ? (
-                  // 有照片：直接生成
+                  // 有照片：跳转到模式选择 (003-2)
                   <>
-                    <Link href="/generation/select-photo">
+                    <Link href="/generation/mode">
                       <Button
                         size="lg"
                         className="gradient-ai text-white px-8 py-6 text-heading-xs shadow-ai hover:shadow-xl transition-all duration-300 hover:scale-105"
