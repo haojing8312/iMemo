@@ -579,3 +579,89 @@ export async function getAllOriginalPhotos(): Promise<PhotoUpload[]> {
     return []
   }
 }
+
+// ========================================
+// T025: 源照片溯源查询
+// ========================================
+
+/**
+ * T025: 根据 AI 生成照片 ID 获取源照片列表
+ * 实现照片溯源功能,允许用户查看 AI 照片是基于哪些原始照片生成的
+ *
+ * @param generatedPhotoId AI 生成照片的 ID
+ * @returns 源照片列表,顺序与 aiMetadata.sourcePhotoIds 保持一致
+ * @throws {Error} 如果照片不存在或不是 AI 生成照片
+ */
+export async function getSourcePhotos(generatedPhotoId: string): Promise<PhotoUpload[]> {
+  try {
+    console.log(`[PhotoLibraryService] 查询源照片: ${generatedPhotoId}`)
+
+    // 1. 获取 AI 生成照片
+    const photos = await findAllLibraryPhotos()
+    const aiPhoto = photos.find(p => p.id === generatedPhotoId)
+
+    // 验证照片是否存在
+    if (!aiPhoto) {
+      console.warn(`[PhotoLibraryService] 照片不存在: ${generatedPhotoId}`)
+      throw new Error('照片不存在')
+    }
+
+    // 验证是否为 AI 生成照片
+    if (!aiPhoto.isAIGenerated) {
+      console.warn(`[PhotoLibraryService] 照片不是 AI 生成: ${generatedPhotoId}`)
+      throw new Error('不是 AI 生成照片')
+    }
+
+    // 验证元数据是否存在
+    if (!aiPhoto.aiMetadata || !aiPhoto.aiMetadata.sourcePhotoIds) {
+      console.warn(`[PhotoLibraryService] AI 照片缺少元数据: ${generatedPhotoId}`)
+      throw new Error('照片元数据缺失')
+    }
+
+    // 2. 解析 sourcePhotoIds 数组
+    const sourcePhotoIds = aiPhoto.aiMetadata.sourcePhotoIds
+
+    if (!Array.isArray(sourcePhotoIds) || sourcePhotoIds.length === 0) {
+      console.warn(`[PhotoLibraryService] sourcePhotoIds 格式错误: ${generatedPhotoId}`)
+      throw new Error('源照片 ID 列表无效')
+    }
+
+    // 3. 批量查询源照片,保持原始顺序
+    const sourcePhotos: PhotoUpload[] = []
+
+    for (const sourceId of sourcePhotoIds) {
+      const sourcePhoto = photos.find(p => p.id === sourceId)
+      if (sourcePhoto) {
+        sourcePhotos.push(sourcePhoto)
+      } else {
+        console.warn(`[PhotoLibraryService] 源照片不存在: ${sourceId}`)
+      }
+    }
+
+    console.log(`[PhotoLibraryService] 找到 ${sourcePhotos.length}/${sourcePhotoIds.length} 张源照片`)
+
+    // 4. 返回源照片列表(按 sourcePhotoIds 顺序)
+    return sourcePhotos
+
+  } catch (error) {
+    console.error('[PhotoLibraryService] 获取源照片失败:', error)
+    throw error
+  }
+}
+
+/**
+ * T025: 根据照片 ID 获取单张照片
+ * 辅助函数,用于查询照片详情
+ *
+ * @param photoId 照片 ID
+ * @returns 照片对象,如果不存在则返回 undefined
+ */
+export async function getPhotoById(photoId: string): Promise<PhotoUpload | undefined> {
+  try {
+    const photos = await findAllLibraryPhotos()
+    return photos.find(p => p.id === photoId)
+  } catch (error) {
+    console.error('[PhotoLibraryService] 获取照片失败:', error)
+    return undefined
+  }
+}
