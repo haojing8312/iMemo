@@ -236,7 +236,7 @@ export default function StyleSelectionPage() {
                 </CardHeader>
                 <CardContent>
                   {/* Style preview image */}
-                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                  <div className="aspect-[3/4] bg-muted rounded-lg overflow-hidden">
                     {style.exampleImage ? (
                       <img
                         src={style.exampleImage}
