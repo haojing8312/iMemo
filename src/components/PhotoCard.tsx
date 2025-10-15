@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { convertFileSrc } from '@tauri-apps/api/core'
-import { Check, Trash2, User, Calendar, Palette } from 'lucide-react'
+import { Check, Trash2, User, Users, Calendar, Palette } from 'lucide-react' // T020: 添加 Users 图标
 import type { PhotoUpload } from '@/lib/types'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -152,11 +152,35 @@ export function PhotoCard({
             <span>{formatDate(photo.uploadedAt)}</span>
           </div>
 
-          {/* AI 风格信息 */}
+          {/* AI 风格信息和生成模式 (T020) */}
           {photo.isAIGenerated && photo.aiMetadata && (
-            <div className="flex items-center gap-1 text-xs text-purple-600">
-              <Palette className="h-3 w-3" />
-              <span>{photo.aiMetadata.styleName}</span>
+            <div className="flex items-center gap-2 flex-wrap">
+              {/* 风格名称 */}
+              <div className="flex items-center gap-1 text-xs text-purple-600">
+                <Palette className="h-3 w-3" />
+                <span>{photo.aiMetadata.styleName}</span>
+              </div>
+
+              {/* T020: 生成模式标记 */}
+              {photo.aiMetadata.generationMode && (
+                <div className={`flex items-center gap-1 px-2 py-0.5 rounded text-xs ${
+                  photo.aiMetadata.generationMode === 'multi'
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'bg-gray-50 text-gray-700'
+                }`}>
+                  {photo.aiMetadata.generationMode === 'multi' ? (
+                    <>
+                      <Users className="h-3 w-3" />
+                      <span>多人</span>
+                    </>
+                  ) : (
+                    <>
+                      <User className="h-3 w-3" />
+                      <span>单人</span>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           )}
 

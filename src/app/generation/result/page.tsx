@@ -148,13 +148,14 @@ export default function ResultPage() {
 
       console.log(`[ResultPage] 成功下载 ${generatedImages.length}/${results.length} 张图片`)
 
-      // 5. 保存到照片库
+      // 5. 保存到照片库 (T019: 传递生成模式)
       const savedCount = await saveAIGeneratedPhotos(
         currentTask.id,
         currentTask.milestoneName,
         'medium', // 默认相似度
         generatedImages,
-        uploadedPhotos
+        uploadedPhotos,
+        currentTask.photoMode || 'single' // T019: 使用任务的生成模式
       )
 
       console.log(`[ResultPage] 已自动保存 ${savedCount} 张照片到照片库`)

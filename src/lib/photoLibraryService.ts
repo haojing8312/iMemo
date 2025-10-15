@@ -413,6 +413,7 @@ export async function getAllTags(): Promise<string[]> {
  * @param similarityLevel 相似度级别
  * @param results 生成结果列表
  * @param sourcePhotos 原始照片列表
+ * @param generationMode T019: 生成模式 (single | multi)
  * @returns 保存的照片数量
  */
 export async function saveAIGeneratedPhotos(
@@ -420,7 +421,8 @@ export async function saveAIGeneratedPhotos(
   milestoneName: string,
   similarityLevel: SimilarityLevel,
   results: GeneratedImage[],
-  sourcePhotos: PhotoUpload[]
+  sourcePhotos: PhotoUpload[],
+  generationMode: 'single' | 'multi' = 'single' // T019: 默认单人模式
 ): Promise<number> {
   try {
     const aiPhotos: PhotoUpload[] = results.map((result) => {
@@ -451,6 +453,7 @@ export async function saveAIGeneratedPhotos(
           sequenceNumber: result.sequenceNum,      // 该风格的第几张图 (1-4)
           generatedAt: result.createdAt,           // 生成时间戳
           isFavorited: false,                      // 初始未收藏
+          generationMode: generationMode,          // T019: 生成模式 (single | multi)
         },
       }
     })
