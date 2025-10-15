@@ -1,13 +1,20 @@
-import { loadStyleConfig } from './configLoader'
+import { loadStyleConfig, type StyleCollectionType, getAllStyleCollections, getStyleCollectionInfo } from './configLoader'
 import { Style } from './types/style'
 import { NotFoundError } from './types/errors'
 import { getMilestoneById } from './milestoneService'
 
+// 导出风格集合相关类型和函数
+export type { StyleCollectionType }
+export { getAllStyleCollections, getStyleCollectionInfo }
+
 /**
- * Get all active styles
+ * Get all active styles from a specific collection
+ * @param collection 风格集合类型,默认为 'all'
  */
-export async function getAllStyles(): Promise<Style[]> {
-  const config = await loadStyleConfig()
+export async function getAllStyles(
+  collection: StyleCollectionType = 'all'
+): Promise<Style[]> {
+  const config = await loadStyleConfig(collection)
   return config.styles.filter(style => style.active)
 }
 
@@ -45,12 +52,17 @@ export async function getStylesByIds(ids: string[]): Promise<Style[]> {
 
 /**
  * Get all styles compatible with a specific milestone
+ * @param milestoneId 里程碑ID
+ * @param collection 风格集合类型,默认为 'all'
  */
-export async function getCompatibleStyles(milestoneId: string): Promise<Style[]> {
+export async function getCompatibleStyles(
+  milestoneId: string,
+  collection: StyleCollectionType = 'all'
+): Promise<Style[]> {
   // Verify milestone exists
   await getMilestoneById(milestoneId)
 
-  const config = await loadStyleConfig()
+  const config = await loadStyleConfig(collection)
 
   return config.styles.filter(
     style =>
@@ -61,10 +73,12 @@ export async function getCompatibleStyles(milestoneId: string): Promise<Style[]>
 
 /**
  * Get default styles for a specific milestone (for auto-generation)
+ * 注意: 一键生成使用全部风格池 (collection='all'),不受分类限制
  */
 export async function getDefaultStylesForMilestone(milestoneId: string): Promise<Style[]> {
   const milestone = await getMilestoneById(milestoneId)
-  const config = await loadStyleConfig()
+  // 一键生成从全部风格中选择
+  const config = await loadStyleConfig('all')
 
   const defaultStyles: Style[] = []
 
@@ -75,9 +89,9 @@ export async function getDefaultStylesForMilestone(milestoneId: string): Promise
     }
   }
 
-  // If no default styles found, fall back to first 3 compatible styles
+  // If no default styles found, fall back to first 3 compatible styles from all collections
   if (defaultStyles.length === 0) {
-    const compatibleStyles = await getCompatibleStyles(milestoneId)
+    const compatibleStyles = await getCompatibleStyles(milestoneId, 'all')
     return compatibleStyles.slice(0, 3)
   }
 

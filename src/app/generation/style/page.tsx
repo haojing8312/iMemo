@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAppStore } from '@/lib/store'
-import { getCompatibleStyles } from '@/lib/styleService'
+import { getCompatibleStyles, getAllStyleCollections } from '@/lib/styleService'
+import { type StyleCollectionType } from '@/lib/configLoader'
 import { createTask } from '@/lib/taskService'
 import type { Style } from '@/lib/types/style'
 import { Check, ChevronLeft, Sparkles } from 'lucide-react'
@@ -25,6 +27,10 @@ export default function StyleSelectionPage() {
   const [selectedStyleIds, setSelectedStyleIds] = useState<Set<string>>(new Set())
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>()
+  const [selectedCollection, setSelectedCollection] = useState<StyleCollectionType>('realistic-studio')
+
+  // 获取所有风格集合
+  const styleCollections = getAllStyleCollections().filter(c => c.id !== 'all')
 
   useEffect(() => {
     // Validate navigation
@@ -40,14 +46,14 @@ export default function StyleSelectionPage() {
 
     // Load compatible styles for selected milestone
     loadCompatibleStyles()
-  }, [selectedMilestone])
+  }, [selectedMilestone, selectedCollection])
 
   const loadCompatibleStyles = async () => {
     if (!selectedMilestone) return
 
     try {
       setIsLoading(true)
-      const styles = await getCompatibleStyles(selectedMilestone.id)
+      const styles = await getCompatibleStyles(selectedMilestone.id, selectedCollection)
       setCompatibleStyles(styles)
 
       // Pre-select default styles
@@ -139,6 +145,33 @@ export default function StyleSelectionPage() {
             {error}
           </div>
         )}
+
+        {/* Style Collection Tabs */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>风格分类</CardTitle>
+            <CardDescription>选择不同的风格类型浏览</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={selectedCollection} onValueChange={(value) => setSelectedCollection(value as StyleCollectionType)}>
+              <TabsList className="grid w-full grid-cols-4 gap-2">
+                {styleCollections.map(collection => (
+                  <TabsTrigger
+                    key={collection.id}
+                    value={collection.id}
+                    className="flex items-center space-x-2"
+                  >
+                    <span className="text-lg">{collection.icon}</span>
+                    <span className="hidden sm:inline">{collection.name}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+            <p className="text-sm text-muted-foreground mt-4">
+              {styleCollections.find(c => c.id === selectedCollection)?.description}
+            </p>
+          </CardContent>
+        </Card>
 
         {/* Style selection info */}
         <Card className="mb-6">
