@@ -40,10 +40,12 @@ export default function SelectPhotoPage() {
   const {
     persons,
     currentPersonFilter,
+    currentTypeFilter,
     selectedPhotoIds,
     loadLibraryPhotos,
     loadPersons,
     setPersonFilter,
+    setTypeFilter,
     togglePhotoSelection,
     clearSelection,
     setSelectedPhotoIds,
@@ -56,10 +58,12 @@ export default function SelectPhotoPage() {
   const [tempPhotos, setTempPhotos] = useState<PhotoWithValidation[]>([])
   const [tempSelectedIds, setTempSelectedIds] = useState<Set<string>>(new Set())
 
-  // 加载照片库数据
+  // 加载照片库数据并设置默认筛选
   useEffect(() => {
     loadLibraryPhotos()
     loadPersons()
+    // 默认显示原始照片
+    setTypeFilter('original')
   }, [])
 
   // T014: 获取当前模式的照片数量限制
@@ -341,43 +345,71 @@ export default function SelectPhotoPage() {
 
           {/* 从照片库选择 */}
           <TabsContent value="library" className="space-y-6">
-            {/* 人物筛选 */}
-            {persons.length > 0 && (
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
+            {/* 筛选器 */}
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-6 flex-wrap">
+                  {/* 照片类型筛选 */}
+                  <div className="flex items-center gap-3">
                     <label className="text-body font-medium text-neutral-700">
-                      筛选人物：
+                      照片类型：
                     </label>
                     <Select
-                      value={currentPersonFilter || 'all'}
-                      onValueChange={(value) => setPersonFilter(value === 'all' ? undefined : value)}
+                      value={currentTypeFilter}
+                      onValueChange={(value) => setTypeFilter(value as 'all' | 'original' | 'ai')}
                     >
-                      <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="所有人物" />
+                      <SelectTrigger className="w-[160px]">
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">所有人物</SelectItem>
-                        {persons.map((person) => (
-                          <SelectItem key={person.id} value={person.id}>
-                            {person.name}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="all">全部照片</SelectItem>
+                        <SelectItem value="original">原始照片</SelectItem>
+                        <SelectItem value="ai">AI 艺术照</SelectItem>
                       </SelectContent>
                     </Select>
-                    {currentPersonFilter && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setPersonFilter(undefined)}
-                      >
-                        清除筛选
-                      </Button>
-                    )}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+
+                  {/* 人物筛选 */}
+                  {persons.length > 0 && (
+                    <div className="flex items-center gap-3">
+                      <label className="text-body font-medium text-neutral-700">
+                        筛选人物：
+                      </label>
+                      <Select
+                        value={currentPersonFilter || 'all'}
+                        onValueChange={(value) => setPersonFilter(value === 'all' ? undefined : value)}
+                      >
+                        <SelectTrigger className="w-[160px]">
+                          <SelectValue placeholder="所有人物" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">所有人物</SelectItem>
+                          {persons.map((person) => (
+                            <SelectItem key={person.id} value={person.id}>
+                              {person.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  {/* 清除筛选按钮 */}
+                  {(currentPersonFilter || currentTypeFilter !== 'all') && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setPersonFilter(undefined)
+                        setTypeFilter('all')
+                      }}
+                    >
+                      清除所有筛选
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* 照片网格 */}
             <PhotoGrid

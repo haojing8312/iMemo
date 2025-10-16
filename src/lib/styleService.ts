@@ -146,9 +146,9 @@ export async function getStylesByMode(
   const allStyles = await getAllStyles(collection)
 
   return allStyles.filter(style => {
-    // 如果风格没有定义 supportedModes,默认支持单人模式
+    // 如果风格没有定义 supportedModes,默认支持所有模式
     if (!style.supportedModes || style.supportedModes.length === 0) {
-      return mode === 'single'
+      return true
     }
 
     return style.supportedModes.includes(mode)
@@ -170,9 +170,9 @@ export async function getCompatibleStylesByMode(
   const compatibleStyles = await getCompatibleStyles(milestoneId, collection)
 
   return compatibleStyles.filter(style => {
-    // 如果风格没有定义 supportedModes,默认支持单人模式
+    // 如果风格没有定义 supportedModes,默认支持所有模式
     if (!style.supportedModes || style.supportedModes.length === 0) {
-      return mode === 'single'
+      return true
     }
 
     return style.supportedModes.includes(mode)
