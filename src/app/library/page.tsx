@@ -163,10 +163,10 @@ export default function LibraryPage() {
     }
   }
 
-  // 生成艺术照（跳转到选择页）
+  // 生成艺术照（跳转到模式选择页）
   const handleGenerateArt = () => {
     clearSelection()
-    router.push('/generation/select-photo')
+    router.push('/generation/mode')
   }
 
   return (

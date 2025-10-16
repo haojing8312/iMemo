@@ -22,7 +22,7 @@ export default function RootLayout({
             </Link>
             <nav className="flex items-center gap-6">
               <Link href="/library" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">照片库</Link>
-              <Link href="/generation/select-photo" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">生成艺术照</Link>
+              <Link href="/generation/mode" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">生成艺术照</Link>
               <Link href="/settings" className="text-body text-neutral-600 hover:text-primary-500 transition-colors">设置</Link>
             </nav>
           </div>

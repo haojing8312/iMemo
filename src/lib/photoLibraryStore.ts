@@ -316,14 +316,51 @@ export function usePersonPhotoCount(personId: string) {
 }
 
 /**
- * 获取所有 AI 照片的可用风格列表（去重）
+ * 风格ID到中文名称的映射表
+ */
+const styleNameMap: Record<string, string> = {
+  // 居家温馨系列
+  'cozy-home-warm-light': '居家暖光温馨风',
+  'forest-fresh-healing': '森系清新治愈风',
+  'vintage-film-retro': '复古胶片风',
+  'dreamy-soft-fairy-light': '梦幻柔光童话风',
+
+  // 风格摄影系列
+  'korean-minimalist': '韩式简约风',
+  'japanese-fresh-clean': '日系小清新风',
+  'european-vintage-classic': '欧美复古风',
+  'milk-bath-flowers': '牛奶浴鲜花风',
+  'artistic-black-white': '艺术黑白风',
+
+  // 家庭互动系列
+  'warm-family-interaction': '温馨亲子互动风',
+  'three-generation-family': '三代同堂温馨风',
+
+  // 创意主题系列
+  'animal-theme-cute': '动物主题萌趣风',
+  'starry-night-dream': '星空梦境风',
+  'fairy-tale-story': '童话故事风',
+  'fairy-forest-elf': '童话森林精灵风',
+  'pixar-3d-animation': 'Pixar 3D动画风',
+  'crystal-ice-palace': '水晶冰雪宫殿风',
+}
+
+/**
+ * 将风格ID转换为中文名称
+ */
+function getStyleDisplayName(styleId: string): string {
+  return styleNameMap[styleId] || styleId
+}
+
+/**
+ * 获取所有 AI 照片的可用风格列表（去重，显示中文名称）
  */
 export function useAvailableAIStyles() {
   const libraryPhotos = usePhotoLibrary(state => state.libraryPhotos)
 
   return useMemo(() => {
     const aiPhotos = libraryPhotos.filter(p => p.isAIGenerated)
-    const stylesMap = new Map<string, string>() // styleId -> styleName
+    const stylesMap = new Map<string, string>() // styleId -> styleName（英文ID）
 
     aiPhotos.forEach(photo => {
       if (photo.aiMetadata) {
@@ -331,6 +368,10 @@ export function useAvailableAIStyles() {
       }
     })
 
-    return Array.from(stylesMap.entries()).map(([id, name]) => ({ id, name }))
+    // 将英文ID转换为中文名称
+    return Array.from(stylesMap.entries()).map(([id, _name]) => ({
+      id,
+      name: getStyleDisplayName(id)
+    }))
   }, [libraryPhotos])
 }
