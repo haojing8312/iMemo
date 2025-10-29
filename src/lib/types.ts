@@ -10,8 +10,11 @@ export type PhotoFormat = 'JPG' | 'PNG'
 // 003-2: 多人照片生成模式类型定义
 // ============================================================================
 
-/** 生成模式 */
+/** 照片生成模式（单人/多人） */
 export type GenerationMode = 'single' | 'multi'
+
+/** 任务创建模式（自动生成/手动选择风格） */
+export type TaskCreationMode = 'auto' | 'manual'
 
 /** 人脸检测结果 (specs/003-2/contracts/photo-validation-api.md) */
 export interface FaceValidationResult {
@@ -183,7 +186,8 @@ export interface AppStore {
   selectedStyleIds: string[]
   similarityLevel: SimilarityLevel
   // 003-2: 模式管理
-  generationMode: GenerationMode          // 当前生成模式
+  generationMode: GenerationMode          // 当前生成模式（单人/多人）
+  taskCreationMode: TaskCreationMode      // 任务创建模式（自动/手动）
   photoValidationResults: Map<string, FaceValidationResult> // 照片验证结果缓存
 
   setUploadedPhotos: (photos: PhotoUpload[]) => void
@@ -194,6 +198,7 @@ export interface AppStore {
   setCurrentTaskId: (taskId: string | undefined) => void
   // 003-2: 新增操作
   setGenerationMode: (mode: GenerationMode) => void
+  setTaskCreationMode: (mode: TaskCreationMode) => void
   setPhotoValidationResult: (photoId: string, result: FaceValidationResult) => void
   clearValidationResults: () => void
   reset: () => void

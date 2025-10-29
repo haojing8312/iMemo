@@ -2,7 +2,7 @@
 // Manages upload photos, selected styles, current task, milestones, and progress
 
 import { create } from 'zustand'
-import type { AppStore, PhotoUpload, SimilarityLevel, GenerationMode, FaceValidationResult } from './types'
+import type { AppStore, PhotoUpload, SimilarityLevel, GenerationMode, TaskCreationMode, FaceValidationResult } from './types'
 import type { Milestone } from './types/milestone'
 import type { GenerationTask, TaskProgress } from './types/task'
 
@@ -29,6 +29,7 @@ export const useAppStore = create<ExtendedAppStore>((set) => ({
 
   // 003-2: 模式管理状态
   generationMode: 'single' as GenerationMode,
+  taskCreationMode: 'auto' as TaskCreationMode,
   photoValidationResults: new Map<string, FaceValidationResult>(),
 
   // Milestone state (T014 - NEW)
@@ -64,6 +65,8 @@ export const useAppStore = create<ExtendedAppStore>((set) => ({
 
   // 003-2: 模式管理 actions
   setGenerationMode: (mode) => set({ generationMode: mode }),
+
+  setTaskCreationMode: (mode) => set({ taskCreationMode: mode }),
 
   setPhotoValidationResult: (photoId, result) =>
     set((state) => {
@@ -121,6 +124,7 @@ export const useAppStore = create<ExtendedAppStore>((set) => ({
       similarityLevel: 'medium',
       selectedMilestone: null,
       generationMode: 'single',
+      taskCreationMode: 'auto',
       photoValidationResults: new Map<string, FaceValidationResult>(),
       currentTask: null,
       taskProgress: null,

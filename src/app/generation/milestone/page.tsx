@@ -19,6 +19,7 @@ export default function MilestonePage() {
     generationMode, // T016: 获取当前生成模式 (single | multi)
     setSelectedMilestone,
     setGenerationMode,
+    setTaskCreationMode,
     setCurrentTask
   } = useAppStore()
 
@@ -66,9 +67,9 @@ export default function MilestonePage() {
     try {
       setIsLoading(true)
 
-      // 保存里程碑和生成模式到 store
+      // 保存里程碑到 store，设置任务创建模式为自动
       setSelectedMilestone(selectedMilestone)
-      setGenerationMode('auto')
+      setTaskCreationMode('auto') // 设置任务创建模式为自动
 
       // T016: 创建任务，传递用户配置和 photoMode
       const task = await createTask({
@@ -101,9 +102,9 @@ export default function MilestonePage() {
   const handleManualSelect = () => {
     if (!selectedMilestone) return
 
-    // 保存里程碑和生成模式到 store
+    // 保存里程碑到 store，设置任务创建模式为手动
     setSelectedMilestone(selectedMilestone)
-    setGenerationMode('manual')
+    setTaskCreationMode('manual') // 设置任务创建模式为手动
 
     // 跳转到风格选择页面
     router.push('/generation/style')

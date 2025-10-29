@@ -48,6 +48,7 @@ export const realisticStudioStyles = {
       "tags": ["居家", "温馨", "暖光", "真实摄影"],
       "exampleImage": "/styles/realistic-cozy-warm.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday"],
+      "supportedModes": ["single", "multi"],
       "premium": false,
       "active": true
     },
@@ -60,6 +61,7 @@ export const realisticStudioStyles = {
       "tags": ["森系", "清新", "治愈", "自然"],
       "exampleImage": "/styles/realistic-forest-fresh.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten"],
+      "supportedModes": ["single", "multi"],
       "premium": false,
       "active": true
     },
@@ -72,6 +74,7 @@ export const realisticStudioStyles = {
       "tags": ["复古", "胶片", "怀旧", "温馨"],
       "exampleImage": "/styles/realistic-vintage-film.jpg",
       "compatibleMilestones": ["full-month", "100-day", "first-birthday", "birthday"],
+      "supportedModes": ["single", "multi"],
       "premium": false,
       "active": true
     },
@@ -84,6 +87,7 @@ export const realisticStudioStyles = {
       "tags": ["梦幻", "柔光", "童话", "仙气"],
       "exampleImage": "/styles/realistic-dreamy-fairy.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday"],
+      "supportedModes": ["single", "multi"],
       "premium": false,
       "active": true
     },
@@ -98,6 +102,7 @@ export const realisticStudioStyles = {
       "tags": ["韩式", "简约", "极简", "高级"],
       "exampleImage": "/styles/realistic-korean-minimalist.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday"],
+      "supportedModes": ["single"],
       "premium": true,
       "active": true
     },
@@ -110,6 +115,7 @@ export const realisticStudioStyles = {
       "tags": ["日系", "小清新", "柔焦", "治愈"],
       "exampleImage": "/styles/realistic-japanese-fresh.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday"],
+      "supportedModes": ["single"],
       "premium": true,
       "active": true
     },
@@ -122,6 +128,7 @@ export const realisticStudioStyles = {
       "tags": ["欧美", "复古", "经典", "高级"],
       "exampleImage": "/styles/realistic-european-vintage.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday"],
+      "supportedModes": ["single"],
       "premium": true,
       "active": true
     },
@@ -134,18 +141,7 @@ export const realisticStudioStyles = {
       "tags": ["牛奶浴", "鲜花", "俯拍", "梦幻"],
       "exampleImage": "/styles/realistic-milk-bath.jpg",
       "compatibleMilestones": ["full-month", "100-day"],
-      "premium": true,
-      "active": true
-    },
-    {
-      "id": "artistic-black-white",
-      "name": "艺术黑白风",
-      "category": "studio-style",
-      "description": "纯黑白摄影，高对比度，艺术永恒",
-      "promptTemplate": "专业艺术黑白{SCENE_TYPE}摄影。严格保持参考图中{SUBJECT_TYPE}的面部特征、肤色、五官比例完全一致，{AGE_DESC}，经典姿势（{EXPRESSION}）。{CLOTHING}。背景为纯黑色（#000000）或纯白色（#FFFFFF），无任何道具干扰。采用戏剧性光影：侧光或逆光，形成明显的明暗对比，高光区域#FFFFFF，阴影区域#1A1A1A，中间灰调丰富。摄影参数：光圈f/2.0，浅景深，边缘自然虚化。拍摄时使用RAW格式，后期转纯黑白，调整曲线增加对比度，保留高光细节和阴影层次。重点表现：{SUBJECT_TYPE}细腻的皮肤纹理、卷曲的睫毛、小手小脚的柔软线条、头发的细节。氛围：艺术、永恒、高级、情感深刻。构图：简约几何构图，利用光影塑造立体感。比例3:4竖版或1:1方形。经典黑白摄影大师风格，纯艺术摄影。",
-      "tags": ["黑白", "艺术", "高对比", "永恒"],
-      "exampleImage": "/styles/realistic-black-white.jpg",
-      "compatibleMilestones": ["birth", "full-month", "100-day"],
+      "supportedModes": ["single"],
       "premium": true,
       "active": true
     },
@@ -160,6 +156,7 @@ export const realisticStudioStyles = {
       "tags": ["亲子", "家庭", "互动", "温馨"],
       "exampleImage": "/styles/realistic-family-warm.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday"],
+      "supportedModes": ["multi"],
       "premium": false,
       "active": true
     },
@@ -172,6 +169,7 @@ export const realisticStudioStyles = {
       "tags": ["三代", "家庭", "传承", "温暖"],
       "exampleImage": "/styles/realistic-three-generation.jpg",
       "compatibleMilestones": ["full-month", "100-day", "first-birthday"],
+      "supportedModes": ["multi"],
       "premium": false,
       "active": true
     },
@@ -186,6 +184,7 @@ export const realisticStudioStyles = {
       "tags": ["动物", "萌趣", "可爱", "主题"],
       "exampleImage": "/styles/realistic-animal-theme.jpg",
       "compatibleMilestones": ["full-month", "100-day", "first-birthday"],
+      "supportedModes": ["single", "multi"],
       "premium": false,
       "active": true
     },
@@ -198,6 +197,7 @@ export const realisticStudioStyles = {
       "tags": ["星空", "梦境", "夜晚", "梦幻"],
       "exampleImage": "/styles/realistic-starry-night.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day"],
+      "supportedModes": ["single", "multi"],
       "premium": true,
       "active": true
     },
@@ -210,6 +210,7 @@ export const realisticStudioStyles = {
       "tags": ["童话", "故事", "创意", "梦幻"],
       "exampleImage": "/styles/realistic-fairy-tale.jpg",
       "compatibleMilestones": ["100-day", "first-birthday"],
+      "supportedModes": ["single", "multi"],
       "premium": true,
       "active": true
     }

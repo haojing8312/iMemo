@@ -66,7 +66,14 @@ export const GENERATION_MODES: Record<GenerationMode, ModeConfig> = {
  * 获取模式配置
  */
 export function getModeConfig(mode: GenerationMode): ModeConfig {
-  return GENERATION_MODES[mode]
+  const config = GENERATION_MODES[mode]
+
+  if (!config) {
+    console.warn(`[模式配置] 无效的生成模式: "${mode}"，使用默认单人模式`)
+    return GENERATION_MODES.single // 默认返回单人模式
+  }
+
+  return config
 }
 
 /**

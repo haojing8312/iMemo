@@ -116,47 +116,67 @@ export async function loadStyleConfig(
   try {
     let config: StyleConfig
 
+    console.log(`[配置加载] 开始加载风格集合: ${collection}`)
+
     switch (collection) {
       case 'realistic-studio':
         // 只返回真实影楼风格
+        console.log('[配置加载] 加载 realistic-studio 数据...')
+        console.log('[配置加载] 原始数据风格数量:', realisticStudioData.styles?.length || 0)
         config = StyleConfigSchema.parse(realisticStudioData)
+        console.log('[配置加载] realistic-studio 验证成功，风格数量:', config.styles.length)
         break
 
       case 'creative-artistic':
         // 返回艺术创意类风格 (art-masterpieces, fantasy-magic, trendy-creative)
+        console.log('[配置加载] 过滤艺术创意风格...')
         config = filterStylesByCategories(creativeStylesData, [
           'art-masterpieces',
           'fantasy-magic',
           'trendy-creative'
         ])
+        console.log('[配置加载] 过滤后风格数量:', config.styles.length)
         break
 
       case 'anime-ip':
         // 返回动漫IP类风格
+        console.log('[配置加载] 过滤动漫IP风格...')
         config = filterStylesByCategories(creativeStylesData, ['anime-ip'])
+        console.log('[配置加载] 过滤后风格数量:', config.styles.length)
         break
 
       case 'sci-fi-future':
         // 返回科幻未来类风格
+        console.log('[配置加载] 过滤科幻未来风格...')
         config = filterStylesByCategories(creativeStylesData, ['sci-fi-future'])
+        console.log('[配置加载] 过滤后风格数量:', config.styles.length)
         break
 
       case 'all':
       default:
         // 合并所有风格配置
+        console.log('[配置加载] 合并所有风格配置...')
         config = mergeStyleConfigs([realisticStudioData, creativeStylesData])
+        console.log('[配置加载] 合并后风格数量:', config.styles.length)
         break
     }
 
     // 验证合并后的配置
+    console.log('[配置加载] 执行最终验证...')
     const validated = StyleConfigSchema.parse(config)
+    console.log('[配置加载] 最终验证成功！风格总数:', validated.styles.length)
 
     // 缓存结果
     styleConfigCache.set(collection, validated)
 
     return validated
   } catch (error) {
+    console.error('[配置加载] ❌ 加载失败！集合:', collection)
+    console.error('[配置加载] 错误详情:', error)
+
     if (error instanceof Error && error.name === 'ZodError') {
+      console.error('[配置加载] Zod 验证错误详情:', (error as any).errors)
+      console.error('[配置加载] 问题字段:', JSON.stringify((error as any).errors, null, 2))
       throw new ConfigValidationError(error as any)
     }
     throw new Error(`Failed to load style configuration for collection "${collection}": ${error}`)

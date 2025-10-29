@@ -36,6 +36,9 @@ export default function SelectPhotoPage() {
   // T014: 获取 generationMode 以决定使用哪种验证规则
   const { setUploadedPhotos, generationMode, setPhotoValidationResult } = useAppStore()
 
+  // 调试日志
+  console.log('[选择照片页面] generationMode:', generationMode)
+
   // 照片库状态
   const {
     persons,
@@ -67,8 +70,8 @@ export default function SelectPhotoPage() {
   }, [])
 
   // T014: 获取当前模式的照片数量限制
-  const modeConfig = getModeConfig(generationMode)
-  const maxPhotos = modeConfig.maxPhotos
+  const modeConfig = getModeConfig(generationMode || 'single') // 默认使用单人模式
+  const maxPhotos = modeConfig?.maxPhotos || 10 // 添加可选链和默认值
 
   // 临时上传照片
   const handleTempUpload = async () => {

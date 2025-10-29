@@ -50,16 +50,29 @@ export default function StyleSelectionPage() {
   }, [selectedMilestone, selectedCollection])
 
   const loadCompatibleStyles = async () => {
-    if (!selectedMilestone) return
+    if (!selectedMilestone) {
+      console.warn('[风格加载] 没有选择里程碑，跳过加载')
+      return
+    }
+
+    console.log('[风格加载] ========== 开始加载风格 ==========')
+    console.log('[风格加载] 里程碑ID:', selectedMilestone.id)
+    console.log('[风格加载] 里程碑名称:', selectedMilestone.name)
+    console.log('[风格加载] 生成模式:', generationMode)
+    console.log('[风格加载] 风格集合:', selectedCollection)
 
     try {
       setIsLoading(true)
       // T011: 根据当前生成模式筛选兼容风格
+      console.log('[风格加载] 调用 getCompatibleStylesByMode...')
       const styles = await getCompatibleStylesByMode(
         selectedMilestone.id,
         generationMode,
         selectedCollection
       )
+      console.log('[风格加载] ✅ 成功加载风格数量:', styles.length)
+      console.log('[风格加载] 风格列表:', styles.map(s => ({ id: s.id, name: s.name, category: s.category })))
+
       setCompatibleStyles(styles)
 
       // Pre-select default styles
@@ -68,12 +81,21 @@ export default function StyleSelectionPage() {
           styles.some(s => s.id === id)
         )
       )
+      console.log('[风格加载] 预选风格数量:', defaultIds.size)
+      console.log('[风格加载] 预选风格IDs:', Array.from(defaultIds))
+
       setSelectedStyleIds(defaultIds)
     } catch (err) {
-      console.error('加载风格失败:', err)
+      console.error('[风格加载] ❌ 加载失败！')
+      console.error('[风格加载] 错误类型:', err instanceof Error ? err.name : typeof err)
+      console.error('[风格加载] 错误详情:', err)
+      if (err instanceof Error) {
+        console.error('[风格加载] 错误堆栈:', err.stack)
+      }
       setError('加载风格失败,请重试')
     } finally {
       setIsLoading(false)
+      console.log('[风格加载] ========== 加载完成 ==========')
     }
   }
 

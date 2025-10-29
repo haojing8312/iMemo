@@ -330,7 +330,6 @@ const styleNameMap: Record<string, string> = {
   'japanese-fresh-clean': '日系小清新风',
   'european-vintage-classic': '欧美复古风',
   'milk-bath-flowers': '牛奶浴鲜花风',
-  'artistic-black-white': '艺术黑白风',
 
   // 家庭互动系列
   'warm-family-interaction': '温馨亲子互动风',

@@ -50,7 +50,8 @@ export const styleConfig = {
       "tags": ["艺术", "梦幻", "经典", "油画"],
       "exampleImage": "/styles/vangogh-starry-night.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "birthday", "wedding", "anniversary"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -62,7 +63,8 @@ export const styleConfig = {
       "tags": ["动漫", "治愈", "童话", "日系"],
       "exampleImage": "/styles/ghibli-magic-forest.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday", "family-reunion"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -74,7 +76,8 @@ export const styleConfig = {
       "tags": ["科幻", "未来", "霓虹", "酷炫"],
       "exampleImage": "/styles/cyberpunk-neon.jpg",
       "compatibleMilestones": ["birth", "coming-of-age", "college-graduation", "wedding", "career-achievement"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -86,6 +89,7 @@ export const styleConfig = {
       "tags": ["水彩", "梦幻", "柔和", "童话"],
       "exampleImage": "/styles/watercolor-dream.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -98,7 +102,8 @@ export const styleConfig = {
       "tags": ["迪士尼", "公主", "童话", "魔法"],
       "exampleImage": "/styles/disney-princess.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday", "wedding"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -110,7 +115,8 @@ export const styleConfig = {
       "tags": ["印象派", "莫奈", "花园", "艺术"],
       "exampleImage": "/styles/monet-garden.jpg",
       "compatibleMilestones": ["birth", "full-month", "wedding", "anniversary", "golden-anniversary", "family-reunion"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -122,6 +128,7 @@ export const styleConfig = {
       "tags": ["像素", "游戏", "复古", "8bit"],
       "exampleImage": "/styles/pixel-8bit.jpg",
       "compatibleMilestones": ["birth", "100-day", "first-birthday", "kindergarten", "birthday", "coming-of-age", "wedding"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -134,7 +141,8 @@ export const styleConfig = {
       "tags": ["蒸汽朋克", "机械", "复古", "奇幻"],
       "exampleImage": "/styles/steampunk-mechanical.jpg",
       "compatibleMilestones": ["birth", "coming-of-age", "college-graduation", "wedding", "career-achievement"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -146,7 +154,8 @@ export const styleConfig = {
       "tags": ["太空", "宇航员", "科幻", "探索"],
       "exampleImage": "/styles/space-astronaut.jpg",
       "compatibleMilestones": ["birth", "100-day", "first-birthday", "kindergarten", "coming-of-age", "college-graduation"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -158,7 +167,8 @@ export const styleConfig = {
       "tags": ["冰雪", "水晶", "魔法", "梦幻"],
       "exampleImage": "/styles/crystal-ice-palace.jpg",
       "compatibleMilestones": ["birth", "100-day", "first-birthday", "birthday", "wedding", "anniversary"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -170,7 +180,8 @@ export const styleConfig = {
       "tags": ["水墨", "中国风", "古典", "祥瑞"],
       "exampleImage": "/styles/chinese-ink-fairyland.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "wedding", "anniversary", "retirement", "golden-anniversary"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -182,7 +193,8 @@ export const styleConfig = {
       "tags": ["波普", "艺术", "潮流", "现代"],
       "exampleImage": "/styles/pop-art-warhol.jpg",
       "compatibleMilestones": ["full-month", "100-day", "first-birthday", "coming-of-age", "college-graduation", "wedding"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -194,7 +206,8 @@ export const styleConfig = {
       "tags": ["皮克斯", "3D", "可爱", "动画"],
       "exampleImage": "/styles/pixar-3d-animation.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -206,7 +219,8 @@ export const styleConfig = {
       "tags": ["新海诚", "动漫", "光影", "唯美"],
       "exampleImage": "/styles/makoto-shinkai.jpg",
       "compatibleMilestones": ["kindergarten", "elementary-graduation", "middle-school-graduation", "high-school-graduation", "coming-of-age", "college-graduation", "wedding"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -218,6 +232,7 @@ export const styleConfig = {
       "tags": ["涂鸦", "街头", "潮流", "嘻哈"],
       "exampleImage": "/styles/street-graffiti.jpg",
       "compatibleMilestones": ["kindergarten", "elementary-graduation", "middle-school-graduation", "high-school-graduation", "coming-of-age", "college-graduation"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -230,7 +245,8 @@ export const styleConfig = {
       "tags": ["魔法", "哈利波特", "奇幻", "神秘"],
       "exampleImage": "/styles/hogwarts-magic.jpg",
       "compatibleMilestones": ["kindergarten", "elementary-graduation", "middle-school-graduation", "high-school-graduation", "coming-of-age", "college-graduation"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -242,7 +258,8 @@ export const styleConfig = {
       "tags": ["毕加索", "立体派", "艺术", "前卫"],
       "exampleImage": "/styles/picasso-cubism.jpg",
       "compatibleMilestones": ["coming-of-age", "college-graduation", "wedding", "career-achievement"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -254,7 +271,8 @@ export const styleConfig = {
       "tags": ["精灵", "森林", "魔法", "奇幻"],
       "exampleImage": "/styles/fairy-forest-elf.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -266,6 +284,7 @@ export const styleConfig = {
       "tags": ["孟菲斯", "几何", "80年代", "潮流"],
       "exampleImage": "/styles/memphis-design.jpg",
       "compatibleMilestones": ["100-day", "first-birthday", "kindergarten", "birthday", "coming-of-age", "wedding"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -278,7 +297,8 @@ export const styleConfig = {
       "tags": ["海底", "美人鱼", "珊瑚", "梦幻"],
       "exampleImage": "/styles/underwater-mermaid.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -290,6 +310,7 @@ export const styleConfig = {
       "tags": ["居家", "温馨", "日系", "治愈"],
       "exampleImage": "/styles/cozy-home-warm.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "parenthood", "family-reunion"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -302,6 +323,7 @@ export const styleConfig = {
       "tags": ["森系", "清新", "治愈", "自然"],
       "exampleImage": "/styles/forest-fresh-healing.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -314,6 +336,7 @@ export const styleConfig = {
       "tags": ["复古", "胶片", "怀旧", "温馨"],
       "exampleImage": "/styles/vintage-film-retro.jpg",
       "compatibleMilestones": ["full-month", "100-day", "first-birthday", "birthday", "wedding", "anniversary", "retirement"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -326,6 +349,7 @@ export const styleConfig = {
       "tags": ["梦幻", "童话", "柔光", "魔法"],
       "exampleImage": "/styles/dreamy-soft-fairy.jpg",
       "compatibleMilestones": ["birth", "full-month", "100-day", "first-birthday", "kindergarten", "birthday", "wedding"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -338,7 +362,8 @@ export const styleConfig = {
       "tags": ["马蒂斯", "剪纸", "艺术", "色彩"],
       "exampleImage": "/styles/matisse-paper-cut.jpg",
       "compatibleMilestones": ["100-day", "first-birthday", "kindergarten", "birthday", "coming-of-age", "wedding"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -350,7 +375,8 @@ export const styleConfig = {
       "tags": ["极光", "北欧", "自然", "壮丽"],
       "exampleImage": "/styles/aurora-nordic.jpg",
       "compatibleMilestones": ["wedding", "anniversary", "golden-anniversary", "family-reunion"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -362,7 +388,8 @@ export const styleConfig = {
       "tags": ["浮世绘", "日本", "版画", "古典"],
       "exampleImage": "/styles/ukiyo-e-japanese.jpg",
       "compatibleMilestones": ["coming-of-age", "college-graduation", "wedding", "retirement", "golden-anniversary"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -374,6 +401,7 @@ export const styleConfig = {
       "tags": ["乐高", "积木", "玩具", "创意"],
       "exampleImage": "/styles/lego-block-world.jpg",
       "compatibleMilestones": ["100-day", "first-birthday", "kindergarten", "elementary-graduation", "birthday"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     },
@@ -386,7 +414,8 @@ export const styleConfig = {
       "tags": ["达利", "超现实", "梦境", "艺术"],
       "exampleImage": "/styles/dali-surrealism.jpg",
       "compatibleMilestones": ["coming-of-age", "college-graduation", "wedding", "career-achievement"],
-      "premium": true,
+      "supportedModes": ["single"],
+      "premium": false,
       "active": true
     },
     {
@@ -398,6 +427,7 @@ export const styleConfig = {
       "tags": ["动画", "赛璐珞", "90年代", "怀旧"],
       "exampleImage": "/styles/cel-animation-90s.jpg",
       "compatibleMilestones": ["kindergarten", "elementary-graduation", "middle-school-graduation", "high-school-graduation", "coming-of-age"],
+      "supportedModes": ["single"],
       "premium": false,
       "active": true
     }
